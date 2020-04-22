@@ -1,0 +1,295 @@
+﻿@model Gharbhetibaa.ViewModels.ExploreVM
+
+@{
+    ViewBag.Title = "Explore";
+}
+
+@if (Model.SearchType == "SearchingFor")
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#chkSearch").prop("checked", true)
+            $('#ItemForID').attr('disabled', 'disabled')
+            $('#ItemTypeID').attr('disabled', 'disabled')
+        });
+    </script>
+}
+@*else if (Model.SearchType == "Item")
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#chkItem").prop("checked", true)
+                $('#ItemForID').attr('enabled', 'enabled')
+                $('#ItemTypeID').attr('enabled', 'enabled')
+            });
+        </script>
+    }*@
+
+<section id="explore">
+    <div class="container">
+        <div class="pages-box pb-4">
+            @using (Html.BeginForm("Index", "Explore", FormMethod.Get))
+            {
+                <div class="row topic-head text-center">
+                    <div class="col-12">
+                        <h3>SEARCH. FIND. MOVE IN</h3>
+                        <hr />
+                    </div>
+                </div>
+
+                <div class="row mt-2 mb-3" id="explore-top">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-md-2">
+                                Search by
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="SearchType" id="chkItem" value="Item" checked>
+                                    <label class="form-check-label" for="chkItem">
+                                        Item
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="SearchType" id="chkSearch" value="SearchingFor">
+                                    <label class="form-check-label" for="chkSearch">
+                                        Search Wish
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-12 col-md-3 pr-md-2">
+                                @Html.DropDownList("ItemForID", null, "--Property For--", htmlAttributes: new { @class = "form-control rounded-0" })
+
+                            </div>
+                            <div class="col-12 col-md-3 pl-md-0 pr-md-2">
+                                @Html.DropDownList("ItemTypeID", null, "--Property Type--", htmlAttributes: new { @class = "form-control rounded-0" })
+                            </div>
+                            <div class="col-12 col-md-4 pl-md-0 pr-md-2">
+                                @*@Html.TextBox("searchText", null, new { @class = "form-control rounded-0 mr-2", @placeholder = "Search by location or City" })*@
+                                @Html.EditorFor(model => model.SearchText, new { htmlAttributes = new { @class = "form-control rounded-0", @Value = Model.SearchText } })
+                            </div>
+                            <div class="col-12 col-md-2 pl-md-0">
+                                <button type="submit" id="btnSearch" value="Search" class="btn btn-feature rounded-0 w-100">Search</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                if (Model.SearchType == "Item")
+                {
+
+                    if (Model.Count > 0 && Model.ItemDetails != null)
+                    {
+                        foreach (var x in Model.ItemDetails)
+                        {
+                            var picURL = x.PictureItems != null && x.PictureItems.Count > 0 ? "/images/Item/" + x.PictureItems.First().Picture.ImageLocation : "/images/Shared/imagenotfound2.jpg";
+
+                            <div class="row border pl-3 pr-3 pt-2 pb-2 mb-2">
+                                <div class="col-12 col-md-2">
+                                    <img src="@picURL" class="img-fluid img-thumbnail" alt="">
+                                </div>
+                                <div class="col-12 col-md-5">
+                                    @Html.ActionLink(x.ItemTitle, "ItemDetails", new { controller = "Item", ItemID = x.ItemID }, new { @class = "a-feature font-weight-bold" })
+                                    <br /><i class="fas fa-map-marker-alt mr-2"></i>@x.LocationCity
+                                    <br />
+                                    @foreach (var c in Model.UserItemDetails)
+                                    {
+                                        if (x.ItemID == c.ItemID)
+                                        {
+                                            <span>By: </span>
+                                            @Html.ActionLink(@c.UserAccount.UserName, "UserProfile", new { controller = "Account", UserName = @c.UserAccount.UserName }, new { @class = "a-feature" })
+                                        }
+                                    }
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <span class="font-weight-bold">Posted on</span><br />
+                                    @x.PostedOn.ToString("MM/dd/yyyy")
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <span class="font-weight-bold">Price</span><br />
+                                    Rs. @x.Price
+                                </div>
+                            </div>
+                        }
+                        if (Model.Pager != null && Model.Pager.TotalPages > 0)
+                        {
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.Pager.CurrentPage == 1)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">Previous</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link" href="@Url.Action("Index", "Explore", new { pageNo = Model.Pager.CurrentPage - 1, SearchType = "Item", searchText = Model.SearchText, ItemForID = Model.ItemForID, ItemTypeID = Model.ItemTypeID })">Previous</a>
+                                                </li>
+                                            }
+
+                                            @for (int page = Model.Pager.StartPage; page < Model.Pager.EndPage + 1; page++)
+                                            {
+                                                var active = page == Model.Pager.CurrentPage ? "active" : string.Empty;
+                                                <li class="page-item @active">
+                                                    <a class="page-link" href="@Url.Action("Index", "Explore", new { pageNo = page, SearchType = "Item", searchText = Model.SearchText, ItemForID = Model.ItemForID, ItemTypeID = Model.ItemTypeID })">
+                                                        @page
+                                                    </a>
+                                                </li>
+                                            }
+
+                                            @if (Model.Pager.CurrentPage == Model.Pager.EndPage)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">Next</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link" href="@Url.Action("Index", "Explore", new { pageNo = Model.Pager.CurrentPage + 1, SearchType = "Item", searchText = Model.SearchText, ItemForID = Model.ItemForID, ItemTypeID = Model.ItemTypeID })">Next</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mt-5">
+                            <div class="col-2 ml-3">
+                                <img src="~/images/Shared/nothing-found.png" alt="Alternate Text" />
+                            </div>
+                            <div class="col-7 pl-0">
+                                <h1 class="lead">SORRY, NOTHING FOUND</h1>
+                                <h3 class="lead">
+                                    Nothing matched your search term.
+                                    <br />Please try again with some different keywords.
+                                </h3>
+                            </div>
+                        </div>
+                    }
+                }
+                else if (Model.SearchType == "SearchingFor")
+                {
+                    if (Model.Count > 0 && Model.SearchingFors != null)
+                    {
+                        foreach (var y in Model.SearchingFors)
+                        {
+                            <div class="row border pl-3 pr-3 pt-2 pb-2 mb-2">
+                                <div class="col-12 col-md-6">
+                                    @Html.ActionLink(y.Title, "SearchingForDetails", new { controller = "SearchingFor", SearchingForID = y.SearchingForID }, new { @class = "a-feature font-weight-bold" })
+                                    <br /><i class="fas fa-map-marker-alt mr-2"></i>@y.LocationCity
+                                    <br />
+                                    @foreach (var c in Model.UserSearchingFors)
+                                    {
+                                        if (y.SearchingForID == c.SearchingForID)
+                                        {
+                                            <span>By: </span>
+                                            @Html.ActionLink(@c.UserAccount.UserName, "UserProfile", new { controller = "Account", UserName = @c.UserAccount.UserName }, new { @class = "a-feature" })
+                                        }
+                                    }
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 offset-md-1">
+                                    <span class="font-weight-bold">Posted on</span><br />
+                                    @y.PostedOn.ToString("MM/dd/yyyy")
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <span class="font-weight-bold">Price range</span><br />
+                                    Rs. @y.PriceRange
+                                </div>
+                            </div>
+                        }
+
+                        if (Model.Pager != null && Model.Pager.TotalPages > 0)
+                        {
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.Pager.CurrentPage == 1)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">Previous</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link" href="@Url.Action("Index", "Explore", new { pageNo = Model.Pager.CurrentPage - 1, SearchType = "SearchingFor", searchText = Model.SearchText })">Previous</a>
+                                                </li>
+                                            }
+
+                                            @for (int page = Model.Pager.StartPage; page < Model.Pager.EndPage + 1; page++)
+                                            {
+                                                var active = page == Model.Pager.CurrentPage ? "active" : string.Empty;
+                                                <li class="page-item @active">
+                                                    <a class="page-link" href="@Url.Action("Index", "Explore", new { pageNo = page, SearchType = "SearchingFor", searchText = Model.SearchText })">
+                                                        @page
+                                                    </a>
+                                                </li>
+                                            }
+
+                                            @if (Model.Pager.CurrentPage == Model.Pager.EndPage)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#">Next</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link" href="@Url.Action("Index", "Explore", new { pageNo = Model.Pager.CurrentPage + 1, SearchType = "SearchingFor", searchText = Model.SearchText })">Next</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mt-5">
+                            <div class="col-2 ml-3">
+                                <img src="~/images/Shared/nothing-found.png" alt="Alternate Text" />
+                            </div>
+                            <div class="col-7 pl-0">
+                                <h1 class="lead">SORRY, NOTHING FOUND</h1>
+                                <h3 class="lead">
+                                    Nothing matched your search term.
+                                    <br />Please try again with some different keywords.
+                                </h3>
+                            </div>
+                        </div>
+                    }
+
+                }
+            }
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+    $('input[name=SearchType]').click(function () {
+        if ($('input[name=SearchType]:checked').val() === "SearchingFor") {
+            $('#ItemForID').attr("disabled", true);
+            $('#ItemTypeID').attr("disabled", true);
+        } else {
+            $('#ItemForID').attr("disabled", false);
+            $('#ItemTypeID').attr("disabled", false);
+        }
+    });
+</script>

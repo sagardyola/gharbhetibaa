@@ -1,0 +1,122 @@
+﻿@model Gharbhetibaa.ViewModels.DashboardVM
+
+<div id="searchingListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                Search Wish
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.SearchingFors.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/searching.png" class="w-50" />
+                        <h4 class="mt-3">
+                            No Search Wish posted .
+                        </h4>
+                        <h5></h5>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Posted By</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var i in Model.SearchingFors)
+                        {
+                            <tr>
+                                <td>
+                                    @using (Html.BeginForm("SearchingForDetails", "SearchingFor", FormMethod.Get))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="SearchingForID" value="@i.SearchingForID" />
+                                        <button type="submit" class="btn p-0 a-feature" title="View Ad Details">@Html.Raw((i.Title.Length > 15 ? i.Title.Substring(0, 15) : i.Title))</button>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.Raw((i.Location.Length > 15 ? i.Location.Substring(0, 15) : i.Location))
+                                </td>
+
+                                <td>
+                                    @{
+                                        var uName = @i.UserSearchingFors.Select(a => a.UserAccount.UserName).First();
+                                    }
+                                    @Html.ActionLink(uName, "UserProfile", new { controller = "Account", UserName = uName }, new { @class = "a-feature" })
+                                </td>
+                                <td>
+                                    @if (i.AdExpiryDate.Date > DateTime.Now.Date)
+                                    {
+                                        <div class="btn btn-sm btn-success">Active</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="btn btn-sm btn-danger">Expired</div>
+                                    }
+                                </td>
+
+                                <td>
+                                    <button class="btn btnDeleteSearching p-0" title="Delete Ad" data-id="@i.SearchingForID"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                @Html.Partial("_Pagination")
+            }
+        </div>
+    </div>
+
+    <script>
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("SearchingFor", "Dashboard")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#searchingListing").replaceWith(response);
+            });
+    });
+
+        $('.btnDeleteSearching').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteDashSearchingFor", "SearchingFor")",
+                        method: "post",
+                        data: {
+                            SearchingForID: $(this).data('id')
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Your Ad has been deleted!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                $("#searchingListing").replaceWith(response);
+                            });
+                    });
+
+                }
+            });
+    });
+    </script>
+</div>

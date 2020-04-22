@@ -1,0 +1,145 @@
+﻿@model Gharbhetibaa.Models.PropertyManagement.Supplier
+
+<div class="modal-header">
+    <h5 class="modal-title text-white" id="exampleModalLongTitle">Add Your Supplier</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+</div>
+<div class="modal-body bg-white">
+    <div class="container mt-2">
+        <div class="row mb-3">
+            <div class="col-12 offset-md-1">
+                <span class="text-danger font-weight-bold">*</span> Indicates required field
+            </div>
+        </div>
+
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "supplierForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.SupplierName) } })
+                    @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Profession, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.Profession, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Profession) } })
+                    @Html.ValidationMessageFor(model => model.Profession, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "col-form-label" })
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.EmailAddress) } })
+                    @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "col-form-label" })
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.MobileNumber) } })
+                    @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "col-form-label" })
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Address) } })
+                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.SupplierNotes, htmlAttributes: new { @class = "col-form-label" })
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.TextAreaFor(model => model.SupplierNotes, new { @class = "form-control rounded-0", @rows = 3, @placeholder = @Html.DisplayNameFor(n => n.SupplierNotes) })
+                    @Html.ValidationMessageFor(model => model.SupplierNotes, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 col-md-7 offset-md-4 text-danger errorMsg" id="formErrors">
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal-footer back-light">
+    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+    <button class="btn btn-primary rounded-0" id="btnSave" type="button">Save</button>
+</div>
+
+<script>
+    $("#supplierForm").validate({
+        errorElement: 'div',
+
+        rules: {
+            SupplierName: {
+                required: true
+            },
+            Profession: {
+                required: true
+            },
+            MobileNumber: {
+                minlength: 10,
+                maxlength: 10
+            }
+        },
+        messages: {
+            SupplierName: {
+                required: "Name is required"
+            },
+            MobileNumber: {
+                minlength: "Invalid Phone number",
+                maxlength: "Invalid Phone number"
+            }
+        }
+    });
+
+    $('#btnSave').click(function () {
+        if ($("#supplierForm").valid) {
+            $.ajax({
+                url: "@Url.Action("AddSupplier", "Supplier")",
+                method: "post",
+                data: $("#supplierForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    $('#modalCreate').modal('toggle');
+                    swal("Success!", "Supplier added!", "success");
+                    ReloadHomeListing();
+                    ReloadSupplierListing();
+                } else {
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+
+    });
+
+</script>

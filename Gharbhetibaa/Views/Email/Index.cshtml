@@ -1,0 +1,112 @@
+﻿@model Gharbhetibaa.ViewModels.EmailVM
+
+<div class="modal-header">
+    <h5 class="modal-title text-white" id="exampleModalLongTitle">Email</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+</div>
+<div class="modal-body bg-white">
+    <div class="container mt-2">
+        <div class="row mb-3">
+            <div class="col-12 offset-md-1">
+                <span class="text-danger font-weight-bold">*</span> Indicates required field
+            </div>
+        </div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "sendEmailForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Email) } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Subject) } })
+                    @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.TextAreaFor(model => model.Message, new { @class = "form-control rounded-0", @rows = 5, @placeholder = @Html.DisplayNameFor(n => n.Message) })
+                    @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-7 offset-md-4 text-danger errorMsg" id="formErrors">
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal-footer back-light">
+    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+    <button class="btn btn-primary rounded-0 btnSendEmail" type="button">Send</button>
+</div>
+
+<script>
+    $("#sendEmailForm").validate({
+        errorElement: 'div',
+
+        rules: {
+            Email: {
+                required: true
+            },
+            Subject: {
+                required: true
+            },
+            Message: {
+                required: true
+            }
+        },
+        messages: {
+            Email: {
+                required: "Email is required"
+            },
+            Subject: {
+                required: "Subject is required"
+            },
+            Message: {
+                required: "Message is required"
+            }
+        }
+    });
+
+    $('.btnSendEmail').click(function () {
+        $('.btnSendEmail').attr('disabled', true)
+
+        if ($("#sendEmailForm").valid) {
+            $.ajax({
+                url: "@Url.Action("SendEmailToUser", "Email")",
+                method: "Post",
+                data: $("#sendEmailForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    
+                    $('#formModal').modal('toggle');
+                    swal("Success!", "Email sent!", "success");
+                } else {
+                    $('.btnSendEmail').attr('disabled', false)
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+    });
+</script>

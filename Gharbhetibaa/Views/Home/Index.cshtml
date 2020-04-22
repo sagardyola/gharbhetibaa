@@ -1,0 +1,431 @@
+﻿@model Gharbhetibaa.ViewModels.HomeVM
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<!-- Slider -->
+<section id="showcase">
+    @if (Model.Showcase.Count() == 0)
+    {
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <img src="~/images/Shared/streetscape.png" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        var c = 0;
+        <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                @foreach (var picture in Model.Showcase)
+                {
+                    var active = c == 0 ? "active" : string.Empty;
+                    <li class="@active" data-target="#carouselIndicators" data-slide-to="@c"></li>
+                    c++;
+                }
+            </ol>
+            <div class="carousel-inner" role="listbox">
+                @{
+                    var d = 0;
+                }
+                @foreach (var x in Model.Showcase)
+                {
+                    var active = d == 0 ? "active" : string.Empty;
+                    var picURL = x.PictureItems != null && x.PictureItems.Count > 0 ? "/images/Item/" + x.PictureItems.First().Picture.ImageLocation : "/images/Shared/streetscape.png";
+                    <div class="carousel-item @active">
+                        @*<img class="w-100" src="@picURL">*@
+                        <div style="background-image: url(@picURL)" class="showcase-image img-fluid"></div>
+                        <div class="carousel-caption">
+                            <h3>@x.ItemTitle</h3>
+                            <span class="d-block">@x.LocationCity</span>
+                            <span class="d-block">Rs. @x.Price</span>
+                            @Html.ActionLink("View Details", "ItemDetails", new { controller = "Item", ItemID = x.ItemID }, new { @class = "btn btn-default btn-sm mb-2 mt-1 rounded-0" })
+                        </div>
+                    </div>
+                    d++;
+                }
+            </div>
+            <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    }
+</section>
+
+<section id="recent">
+    <!-- Recent Ads -->
+    <div class="container-fluid pl-5 pr-5">
+        <div class="row">
+            <div class="col-12">
+                <h3>Recent Ads</h3>
+            </div>
+        </div>
+        <!-- Cards -->
+        <div class="row">
+            @if (Model.CountItems == 0)
+            {
+                <div class="col-12">
+                    <h4 class="ml-5">[No Ads posted yet]</h4>
+                </div>
+            }
+            else
+            {
+                foreach (var x in Model.RecentAds)
+                {
+                    var picURL = x.PictureItems != null && x.PictureItems.Count > 0 ? "/images/Item/" + x.PictureItems.First().Picture.ImageLocation : "/images/Shared/imagenotfound2.jpg";
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2 itm-cards p-2">
+                        <div class="product-item">
+                            <div class="pi-img-wrapper">
+                                <img src="@picURL" class="img-fluid" alt="">
+                                <div>
+
+                                    @Html.ActionLink("View", "ItemDetails", new { controller = "Item", ItemID = x.ItemID }, new { @class = "btn btn-site btn-sm" })
+                                </div>
+                            </div>
+                            <h6 class="text-uppercase">
+                                @x.ItemType.ItemTypeTitle
+                                <br />@x.ItemFor.ItemForTitle
+                            </h6>
+                            <div class="pi-price">
+                                <i class="fas fa-map-marker-alt"></i>&nbsp;&nbsp;
+                                @Html.Raw((x.Location.Length > 20 ? x.Location.Substring(0, 20) : x.Location))
+                                <br />
+                                Rs. @x.Price
+                            </div>
+                            @if (x.PostedOn.Date == DateTime.Now.Date)
+                            {
+                                <div class="sticker sticker-new"></div>
+                            }
+
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Why Gharbheti -->
+<section id="why-info">
+    <div class="container-fluid">
+        <div class="row topic-head text-center">
+            <div class="col-12">
+                <h3>Why Gharbhetibaa?</h3>
+                <hr>
+            </div>
+        </div>
+        <div class="row why-info-details pb-3">
+            <div class="col-12 text-center">
+                <h5 class="lead">Gharbhetibaa helps landlords and tenants to let, rent or manage any kind of shared accommodation, avoiding excessive fees and management hassles. At Gharbhetibaa we care about matching quality.</h5>
+
+                <h5 class="lead">Managing your property has never been so easy, accessible and productive. Stay in control of your earnings, manage your tenancies, revenue and documents with our innovative application.</h5>
+                @Html.ActionLink("VIEW MORE", "WhyUse", "Home", null, new { @class = "btn btn-default rounded-0 mt-2" })
+            </div>
+        </div>
+        <div class="row text-center p-4">
+            <div class="col-6">
+                <img src="~/images/Shared/tenanmgt.png" height="110" />
+                <h6 class="lead">
+                    Looking for a tenant or a flatmate? Create an advert  and we will show you who’s
+                    looking for a room just like yours.
+                </h6>
+                @Html.ActionLink("POST YOUR ROOM", "Index", "MyActivity", null, new { @class = "btn btn-details rounded-0 mt-2" })
+            </div>
+            <div class="col-6">
+                <img src="~/images/Shared/doc.png" height="110" />
+
+                <h6 class="lead">
+                    Forgot when you last collected your rents? Cannot track the amounts due?
+                    Leave all this hassle behind.
+                </h6>
+                @Html.ActionLink("START", "Index", "PropertyManagement", null, new { @class = "btn btn-details rounded-0 mt-2" })
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wishlist -->
+<section id="searchwish">
+    <div class="container-fluid p-4">
+        <div class="row text-center">
+            <div class="col-12">
+                <h5>Couldn't find what you're looking for? Create a Search Wish Ad.</h5>
+                @Html.ActionLink("CREATE NOW", "AddSearchingFor", "SearchingFor", null, new { @class = "btn btn-default mt-2 rounded-0" })
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="popular">
+    <!-- Popular Ads -->
+    <div class="container-fluid pl-5 pr-5">
+        <div class="row">
+            <div class="col-6">
+                <h3>Rent/Sale</h3>
+            </div>
+            <div class="col-6">
+                <h3>Homestay/Roommate</h3>
+            </div>
+        </div>
+        <!-- Cards -->
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    @if (Model.RentSale.Count() == 0)
+                    {
+                        <div class="col-12">
+                            <h4 class="ml-5">[No Ads posted yet]</h4>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var x in Model.RentSale)
+                        {
+                            var picURL = x.PictureItems != null && x.PictureItems.Count > 0 ? "/images/Item/" + x.PictureItems.First().Picture.ImageLocation : "/images/Shared/imagenotfound2.jpg";
+                            <div class="col-12 col-md-4 itm-cards p-2">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="@picURL" class="img-fluid" alt="">
+                                        <div>
+
+                                            @Html.ActionLink("View", "ItemDetails", new { controller = "Item", ItemID = x.ItemID }, new { @class = "btn btn-site btn-sm" })
+                                        </div>
+                                    </div>
+                                    <h6 class="text-uppercase">
+                                        @x.ItemType.ItemTypeTitle
+                                        <br />@x.ItemFor.ItemForTitle
+                                    </h6>
+                                    <div class="pi-price">
+                                        <i class="fas fa-map-marker-alt"></i>&nbsp;&nbsp;
+                                        @Html.Raw((x.Location.Length > 20 ? x.Location.Substring(0, 20) : x.Location))
+
+                                        <br />
+                                        Rs. @x.Price
+                                    </div>
+                                    @if (x.PostedOn.Date == DateTime.Now.Date)
+                                    {
+                                        <div class="sticker sticker-new"></div>
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="row">
+                    @if (Model.HomestayRoommate.Count() == 0)
+                    {
+                        <div class="col-12">
+                            <h4 class="ml-5">[No Ads posted yet]</h4>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var x in Model.HomestayRoommate)
+                        {
+                            var picURL = x.PictureItems != null && x.PictureItems.Count > 0 ? "/images/Item/" + x.PictureItems.First().Picture.ImageLocation : "/images/Shared/imagenotfound2.jpg";
+                            <div class="col-12 col-md-4 itm-cards p-2">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="@picURL" class="img-fluid" alt="">
+                                        <div>
+
+                                            @Html.ActionLink("View", "ItemDetails", new { controller = "Item", ItemID = x.ItemID }, new { @class = "btn btn-site btn-sm" })
+                                        </div>
+                                    </div>
+                                    <h6 class="text-uppercase">
+                                        @x.ItemType.ItemTypeTitle
+                                        <br />@x.ItemFor.ItemForTitle
+                                    </h6>
+                                    <div class="pi-price">
+                                        <i class="fas fa-map-marker-alt"></i>&nbsp;&nbsp;
+                                        @Html.Raw((x.Location.Length > 20 ? x.Location.Substring(0, 20) : x.Location))
+
+                                        <br />
+                                        <i class="fas fa-coins"></i>&nbsp;@x.Price
+                                    </div>
+                                    @if (x.PostedOn.Date == DateTime.Now.Date)
+                                    {
+                                        <div class="sticker sticker-new"></div>
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="makemove">
+    <div class="container-fluid p-4">
+        <div class="row text-center">
+            <div class="col-12">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <h2>Make your move!</h2>
+                    <h5>Create your Gharbhetibaa account and join us</h5>
+                    @Html.ActionLink("EXPLORE", "Index", "Explore", null, new { @class = "btn btn-default mt-2 rounded-0" })
+                    @Html.ActionLink("SIGN UP", "Register", "Account", null, new { @class = "btn btn-feature mt-2 ml-2 rounded-0" })
+                }
+                else
+                {
+                    <h2>Important Details, at a glance</h2>
+                    <h5>Easily see a property's details.</h5>
+                    @Html.ActionLink("EXPLORE", "Index", "Explore", null, new { @class = "btn btn-default mt-2 rounded-0" })
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- How it works -->
+<section id="howitworks">
+    <div class="container-fluid">
+        <div class="row topic-head text-center mb-2">
+            <div class="col-12">
+                <h3>How Gharbhetibaa works?</h3>
+            </div>
+        </div>
+
+        <div class="row text-center" id="howitworks-tabs">
+            <div class="col-sm-6 offset-3">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-roomlet-tab" data-toggle="tab" href="#nav-roomlet"
+                           role="tab" aria-controls="nav-roomlet" aria-selected="true">
+                            Got a room to let?
+                        </a>
+                        <a class="nav-item nav-link" id="nav-needroom-tab" data-toggle="tab" href="#nav-needroom"
+                           role="tab" aria-controls="nav-needroom" aria-selected="false">
+                            Need a room?
+                        </a>
+                        <a class="nav-item nav-link" id="nav-roommate-tab" data-toggle="tab" href="#nav-roommate"
+                           role="tab" aria-controls="nav-roommate" aria-selected="false">
+                            Need a roommate?
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="tab-content py-3 px-3 px-sm-0 text-center" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-roomlet" role="tabpanel" aria-labelledby="nav-roomlet-tab">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Need a Tenant? -->
+                        <i class="fas fa-user"></i>
+                        <h5>Need a Tenant?</h5>
+                        <p>
+                            Advertise your Buildings, Rooms, Flats, Houses
+                            and Apartments.
+                        </p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Setup a Free Profile -->
+                        <i class="far fa-id-card"></i>
+                        <h5>Setup a Free Profile</h5>
+                        <p>
+                            Easily build your profile and list the property making it visible to
+                            property seeker.
+                        </p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Advertise your room -->
+                        <i class="fas fa-bullhorn"></i>
+                        <h5>Advertise your room</h5>
+                        <p>Advertise your Property to thousands of potential and genuine tenants.</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Welcome New Tenant -->
+                        <i class="fas fa-handshake"></i>
+                        <h5>Welcome New Tenant</h5>
+                        <p>
+                            Providing your new tenants with a simple, thoughtful
+                            and welcome package.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-needroom" role="tabpanel" aria-labelledby="nav-needroom-tab">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Search -->
+                        <i class="fas fa-search-location"></i>
+                        <h5>Search</h5>
+                        <p>Find a place that fits all your preferences.</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Book -->
+                        <i class="fas fa-receipt"></i>
+                        <!-- <i class="fas fa-user-lock"></i> -->
+                        <h5>Book</h5>
+                        <p>Pay a token amount to lock the Room / House.</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Field visit -->
+                        <i class="fas fa-walking"></i>
+                        <h5>Field Visit</h5>
+                        <p>Finalise a time and date to visit the home you like.</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Move In -->
+                        <i class="fas fa-people-carry"></i>
+                        <h5>Move In</h5>
+                        <p>Choose a move-in date and just show up!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-roommate" role="tabpanel" aria-labelledby="nav-roommate-tab">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Search -->
+                        <i class="fas fa-handshake"></i>
+                        <h5>Matching Lifestyles</h5>
+                        <p>Find roommates that fit your personality and preferences.</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Book -->
+                        <i class="fas fa-comments"></i>
+                        <!-- <i class="fas fa-user-lock"></i> -->
+                        <h5>Safe Introductions</h5>
+                        <p>
+                            Chat with potential roommates selectively & safely on our platform before
+                            meeting.
+                        </p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Field visit -->
+                        <i class="fas fa-walking"></i>
+                        <h5>Field Visit</h5>
+                        <p>Finalise a time and date to visit the home you like.</p>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <!-- Move In -->
+                        <i class="fas fa-home"></i>
+                        <h5>Feel at Home</h5>
+                        <p>
+                            Share a new apartment or an existing one with a roommate who is the right
+                            fit.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

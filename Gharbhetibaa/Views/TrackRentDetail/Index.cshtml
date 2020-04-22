@@ -1,0 +1,161 @@
+﻿@model Gharbhetibaa.ViewModels.PropertyManagementVM
+
+@{
+    ViewBag.Title = "Rent Details";
+}
+
+
+<section id="rentdetail">
+    <div class="container">
+        <div class="pages-box">
+            <div class="row topic-head text-center mb-3">
+                <div class="col-12">
+                    <h3>
+                        @Model.TenantName (@Model.PropertyName)
+                    </h3>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row mb-2 text-right">
+                <div class="col-12">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addRent" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="PropertyID" value="@Model.PropertyID" />
+                        <input type="hidden" name="TenantID" value="@Model.TenantID" />
+                        <button type="button" class="btn btn-sm btn-feature btnAddRentDetails" title="Add Rent Details" data-toggle="modal" data-target="#modalCreate">
+                            <i class="fas fa-plus mr-2 txt-default"></i>Add Rent Details?
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table text-center">
+                    <tr>
+                        <th>Date</th>
+                        <th>Rent</th>
+                        <th>Electricity</th>
+                        <th>Water Supply</th>
+                        <th>Miscellaneous</th>
+                        <th>Total</th>
+                        <th>Amount Payed</th>
+                        <th>Balance</th>
+                        <th></th>
+                    </tr>
+
+                    @{double? balance = 0;
+                        double? total = 0;
+                    }
+
+                    @foreach (var z in Model.RentDetails)
+                    {
+                        total = z.Total - balance;
+                        balance = z.AmountPayed - total;
+                        <tr>
+                            <td>@z.Month.ToString("MM/dd/yyyy")</td>
+                            <td>@z.MonthlyRent</td>
+                            <td>@z.Electricity</td>
+                            <td>@z.WaterSupply</td>
+                            <td>@z.Miscellaneous</td>
+                            <td>@total</td>
+                            <td>@z.AmountPayed</td>
+                            <td>@balance</td>
+                            <td>
+                                <div class="form-inline">
+                                    <button type="button" class="btn pt-0 pb-0 btnEditRentDetails" title="Edit Rent Details" data-id="@z.RentID" data-toggle="modal" data-target="#modalCreate"><i class="fas fa-edit"></i></button>
+                               
+                                    <button class="btn btnDeleteRent pt-0 pb-0" title="Delete Tenant Details" p-id="@Model.PropertyID" t-id="@Model.TenantID" r-id="@z.RentID"><i class="fas fa-trash-alt"></i></button>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+</section>
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content back-secondary" id="contentCreate">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function ReloadAddRentListing() {
+        swal("Success", "Rent details added!", {
+            icon: "success",
+        })
+            .then((value) => {
+                window.location.reload();
+           });
+    }
+
+    function ReloadEditRentListing() {
+        swal("Success", "Rent details updated!", {
+            icon: "success",
+        })
+            .then((value) => {
+                window.location.reload();
+            });
+    }
+
+    $(".btnAddRentDetails").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddRentDetail", "TrackRentDetail")",
+            type: "get",
+            data: $("#addRent").serialize()
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+    $(".btnEditRentDetails").click(function () {
+        $.ajax({
+            url: "@Url.Action("EditRentDetail", "TrackRentDetail")",
+            type: "get",
+            data: {
+                RentID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+    $('.btnDeleteRent').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteRentDetail", "TrackRentDetail")",
+                        method: "post",
+                        data: {
+                            PropertyID: $(this).attr("p-id"),
+                            TenantID: $(this).attr("t-id"),
+                            RentID: $(this).attr("r-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Rent details removed!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                window.location.reload();
+                            });
+                    });
+
+                }
+            });
+        });
+</script>

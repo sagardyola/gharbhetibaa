@@ -1,0 +1,258 @@
+﻿@model Gharbhetibaa.ViewModels.PropertyManagementVM
+
+<div id="expenseListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                My Expenses
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-2">
+                    <div class="col-form-label font-weight-bold">Filter by</div>
+                </div>
+                <div class="col-10">
+                    @using (Html.BeginForm("MyExpenses", "PropertyManagement", FormMethod.Get))
+                    {
+                        @Html.DropDownList("PropertyID", null, "Select Property", htmlAttributes: new { @class = "form-control rounded-0" })
+                    }
+                </div>
+            </div>
+
+            @if (Model.Expenses.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/no_expenses.jpg" class="w-50" />
+                        <h4 class="mt-3">
+                            You can add a new expense and then assign it to a property on the property dashboard after you have added a lease.
+                        </h4>
+                        <h5></h5>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Title</th>
+                            <th>Amount</th>
+                            <th>Property</th>
+                            <th>Payment Date</th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var x in Model.Expenses)
+                        {
+                            <tr>
+                                <td>
+                                    @foreach (var y in Model.UserExpenses)
+                                    {
+                                        if (x.ExpenseID == y.ExpenseID)
+                                        {
+                                            <button class="btn btnExpenseDetails a-feature p-0" title="View Expense Details" data-id="@x.ExpenseID" data-toggle="modal" data-target="#formModal">@x.ExpenseTitle</button>
+
+                                        }
+                                    }
+                                </td>
+                                <td>@x.TotalAmount</td>
+                                <td>
+                                    @foreach (var y in Model.UserExpenses)
+                                    {
+                                        if (x.ExpenseID == y.ExpenseID)
+                                        {
+                                            <button class="btn a-feature btnPropertyDetails p-0" title="View Property Details" data-id="@y.Property.PropertyID" data-toggle="modal" data-target="#formModal">@y.Property.Title</button>
+                                        }
+                                    }
+                                </td>
+                                <td>@x.PaymentDate.ToString("MM/dd/yyyy")</td>
+                                <td>
+                                    <div class="form-inline">
+
+                                        <button type="submit" class="btn pt-0 pb-0 btnEditExpense" title="Edit Expense" data-id="@x.ExpenseID" data-toggle="modal" data-target="#modalCreate"><i class="fas fa-edit"></i></button>
+
+                                        <button class="btn btnDeleteExpense pt-0 pb-0" title="Delete Expense" data-id="@x.ExpenseID"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                if (Model.Pager != null && Model.Pager.TotalPages > 0)
+                {
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    @if (Model.Pager.CurrentPage == 1)
+                                    {
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#">Previous</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            @{
+                                                var btnprev = @Model.Pager.CurrentPage - 1;
+                                            }
+                                            <button class="page-link pager-site" type="button" data-id="@btnprev" p-id="@Model.PropertyID">Previous</button>
+                                        </li>
+                                    }
+
+                                    @for (int page = Model.Pager.StartPage; page < Model.Pager.EndPage + 1; page++)
+                                    {
+                                        var active = page == Model.Pager.CurrentPage ? "active" : string.Empty;
+                                        <li class="page-item @active">
+                                            <button class="page-link pager-site" type="button" data-id="@page" p-id="@Model.PropertyID">
+                                                @page
+                                            </button>
+                                        </li>
+                                    }
+
+                                    @if (Model.Pager.CurrentPage == Model.Pager.EndPage)
+                                    {
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            @{
+                                                var btnNext = @Model.Pager.CurrentPage + 1;
+                                            }
+
+                                            <button class="page-link pager-site" type="button" data-id="@btnNext" p-id="@Model.PropertyID">Next</button>
+                                        </li>
+                                    }
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content back-secondary" id="expenseContent">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    $(".btnEditExpense").click(function () {
+        $.ajax({
+            url: "@Url.Action("EditExpense", "Expense")",
+            type: "get",
+            data: {
+                ExpenseID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+        $("#PropertyID").change(function () {
+            $.ajax({
+            url: "@Url.Action("MyExpenses", "PropertyManagement")",
+            type: "get",
+            data: {
+                PropertyID: $(this).val()
+            }
+        }).done(function (response) {
+            $("#expenseListing").replaceWith(response);
+
+            });
+        });
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyExpenses", "PropertyManagement")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id"),
+                PropertyID: $(this).attr("p-id")
+            }
+        }).done(function (response) {
+            $("#expenseListing").replaceWith(response);
+            });
+    });
+
+        $(".btnExpenseDetails").click(function (){
+        $.ajax({
+            url: "@Url.Action("Index", "Expense")",
+            method: "get",
+            data: {
+                ExpenseID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#expenseContent").html(response);
+
+            });
+    });
+
+
+    $(".btnPropertyDetails").click(function (){
+        $.ajax({
+            url: "@Url.Action("Index", "TrackProperty")",
+            type: "get",
+            data: {
+                PropertyID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#expenseContent").html(response);
+
+            });
+    });
+
+
+    $('.btnDeleteExpense').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteExpense", "Expense")",
+                        method: "post",
+                        data: {
+                            ExpenseID: $(this).attr("data-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Expense has been deleted!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                $("#expenseListing").replaceWith(response);
+                            });
+                    });
+
+                }
+            });
+        });
+
+        function ReloadExpenseListing() {
+            $.ajax({
+                url: "@Url.Action("MyExpenses", "PropertyManagement")",
+                method: "get"
+            }).done(function (response) {
+                $("#expenseListing").replaceWith(response);
+
+            });
+        }
+    </script>
+</div>

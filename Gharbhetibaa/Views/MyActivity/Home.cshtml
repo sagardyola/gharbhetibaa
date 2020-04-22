@@ -1,0 +1,58 @@
+﻿@model Gharbhetibaa.ViewModels.MyActivityVM
+
+<section id="activityhome">
+    <div class="row">
+        <div class="col-12">
+            <img src="~/images/Shared/streetscape.png" class="img-fluid" />
+        </div>
+    </div>
+    <div class="row text-center mt-4">
+        <div class="col-6 dash-outer">
+            <div class="dash-inner border border-info">
+                <h3>@Model.ItemsAdded</h3>
+                Items Added
+            </div>
+        </div>
+        <div class="col-6 dash-outer">
+            <div class="dash-inner border border-info">
+                <h3>@Model.SearchingAdded</h3>
+                Search Wish Added
+            </div>
+        </div>
+        <div class="col-6 dash-outer">
+            <div class="dash-inner border border-info">
+                <h3>@Model.ItemsWishListed</h3>
+                Items Wishlisted
+            </div>
+        </div>
+        <div class="col-6 dash-outer">
+            <div class="dash-inner border border-info">
+                <h3>@Model.SearchingWishListed</h3>
+                Search Wish Wishlisted
+            </div>
+        </div>
+        <div class="col-6 dash-outer">
+            <div class="dash-inner border border-info">
+                <h3>@Model.ItemsBooked</h3>
+                Items Booked
+            </div>
+        </div>
+        <div class="col-6 dash-outer">
+            <div class="dash-inner border border-info">
+                <h3>@Model.SearchingBooked</h3>
+                Search Wish Booked
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ReloadHomeListing() {
+            $.ajax({
+                url: "@Url.Action("Home", "MyActivity")",
+                method: "get"
+            }).done(function (response) {
+                $("#activityhome").replaceWith(response);
+            });
+        }
+    </script>
+</section>

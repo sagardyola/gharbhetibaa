@@ -1,0 +1,436 @@
+﻿@model Gharbhetibaa.Models.Item.ItemDetail
+
+<section id="additemdetails">
+    <div class="modal-header">
+        <h5 class="modal-title text-white" id="exampleModalLongTitle">Add Your Property</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="text-white">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body bg-white">
+        <div class="container mt-2">
+            <div class="stepwizard mb-2">
+                <div class="stepwizard-row setup-panel">
+                    <div class="stepwizard-step">
+                        <a href="#step-1" type="button" class="btn btn-default btn-circle">1</a>
+                        <p class="mt-2">Step 1</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-2" type="button" class="btn btn-site btn-circle" disabled="disabled">2</a>
+                        <p class="mt-2">Step 2</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-3" type="button" class="btn btn-site btn-circle" disabled="disabled">3</a>
+                        <p class="mt-2">Step 3</p>
+                    </div>
+                </div>
+            </div>
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "itemForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="setup-content" id="step-1">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <span class="text-danger font-weight-bold">*</span> Indicates required field
+                        </div>
+                    </div>
+
+                    <section id="property">
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.ItemFor.ItemForTitle, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownList("ItemForID", null, htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.ItemFor.ItemForTitle, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.ItemType.ItemTypeTitle, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownList("ItemTypeID", null, htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.ItemType.ItemTypeTitle, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="propertydetails">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <hr />
+                                <h5>Property Details</h5>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Location) } })
+                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.City) } })
+                                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Area, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Area) } })
+                                @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Price) } })
+                                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2 form-check pl-5">
+                                @Html.CheckBoxFor(model => model.PriceNegotiable, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.PriceNegotiable, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.PriceNegotiable, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.TextAreaFor(model => model.Description, new { @class = "form-control rounded-0", @rows = 3, @placeholder = @Html.DisplayNameFor(n => n.Description) })
+                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.AdExpiryDate, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.AdRunDays, new SelectList(new string[] { "30 Days", "60 Days", "90 Days", "120 Days" }, "30 Days"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.AdRunDays, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <div class="row text-right">
+                        <div class="col-12">
+                            <hr />
+                            <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary nextBtn pull-right rounded-0" type="button">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-content" id="step-2">
+                    <section id="picItem">
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                <div class="col-form-label">Image</div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <input id="ItemPic" class="rounded-0 mt-2" name="PictureItems" type="file" accept="image/*" multiple />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" id="picturesArea"></div>
+                            <input type="hidden" name="ItemPic" id="pictureIDs" />
+                        </div>
+                    </section>
+
+                    <section id="lookingfor">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <hr />
+                                <h5>Looking For</h5>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.LookingFor.Gender, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.LookingFor.Gender, new SelectList(new string[] { "Any", "Male", "Female", "Other" }, "Any"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.LookingFor.Gender, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.LookingFor.MaritalStatus, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.LookingFor.MaritalStatus, new SelectList(new string[] { "Any", "Single", "In a Relationship", "Engaged", "Married", "Separated", "Divorced", "Widowed" }, "Any"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.LookingFor.MaritalStatus, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="lifestyle">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <hr />
+                                <h5>Lifestyle</h5>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Lifestyle.OvernightGuests, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.Lifestyle.OvernightGuests, new SelectList(new string[] { "Never", "Rarely", "Occasionally", "Often" }, "Never"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.Lifestyle.OvernightGuests, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Lifestyle.PartyHabits, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.Lifestyle.PartyHabits, new SelectList(new string[] { "Never", "Rarely", "Occasionally", "Weekends", "Daily" }, "Never"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.Lifestyle.PartyHabits, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Lifestyle.Smoker, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.Lifestyle.Smoker, new SelectList(new string[] { "Yes", "No", "Outside only" }, "No"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.Lifestyle.Smoker, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-2">
+                                @Html.LabelFor(model => model.Lifestyle.PetsFriendly, htmlAttributes: new { @class = "col-form-label" })
+                            </div>
+                            <div class="col-6 col-md-4">
+                                @Html.DropDownListFor(model => model.Lifestyle.PetsFriendly, new SelectList(new string[] { "Yes", "No" }, "Yes"), htmlAttributes: new { @class = "form-control rounded-0" })
+                                @Html.ValidationMessageFor(model => model.Lifestyle.PetsFriendly, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="row text-right">
+                        <div class="col-12">
+                            <hr />
+                            <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary nextBtn pull-right rounded-0" type="button">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-content" id="step-3">
+                    <section id="roomdetails">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5>Room Details</h5>
+                            </div>
+                        </div>
+                        <div class="row mb-3 pl-5">
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.RoomDetail.LivingRoom, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.RoomDetail.LivingRoom, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.RoomDetail.LivingRoom, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.RoomDetail.BedRoom, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.RoomDetail.BedRoom, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.RoomDetail.BedRoom, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.RoomDetail.Kitchen, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.RoomDetail.Kitchen, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.RoomDetail.Kitchen, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.RoomDetail.Bathroom, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.RoomDetail.Bathroom, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.RoomDetail.Bathroom, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.RoomDetail.Balcony, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.RoomDetail.Balcony, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.RoomDetail.Balcony, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="otherfeatures">
+                        <div class="row">
+                            <div class="col-12">
+                                <hr />
+                                <h5>Other Features</h5>
+                            </div>
+                        </div>
+                        <div class="row mb-3 pl-5">
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.Garden, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.Garden, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.Garden, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.ParkingSpace, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.ParkingSpace, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.ParkingSpace, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.Garage, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.Garage, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.Garage, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.SecurityGuard, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.SecurityGuard, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.SecurityGuard, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.BackupGenerator, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.BackupGenerator, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.BackupGenerator, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.WaterSupply, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.WaterSupply, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.WaterSupply, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.Internet, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.Internet, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.Internet, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.Gymnasium, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.Gymnasium, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.Gymnasium, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.SwimmingPool, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.SwimmingPool, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.SwimmingPool, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-6 col-md-3 form-check">
+                                @Html.CheckBoxFor(model => model.OtherFeature.Elevator, new { @class = "form-check-input" })
+                                @Html.LabelFor(model => model.OtherFeature.Elevator, htmlAttributes: new { @class = "form-check-label" })
+                                @Html.ValidationMessageFor(model => model.OtherFeature.Elevator, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="row text-right">
+                        <div class="col-12">
+                            <hr />
+                            <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary rounded-0" id="btnSave" type="button">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-7 offset-md-4 text-danger errorMsg" id="formErrors">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="imageTemplate" class="d-none">
+        <img class='image img-fluid' style='width: 25%;' src='' />
+    </div>
+</section>
+
+@Scripts.Render("~/bundles/Site_Custom/form")
+@Scripts.Render("~/bundles/Site_Custom/formpages")
+
+
+<script>
+    $("#itemForm").validate({
+        errorElement: 'div',
+
+        rules: {
+            Price: {
+                required: true
+            },
+            Location: {
+                required: true
+            },
+            City: {
+                required: true
+            }
+        },
+        messages: {
+            Price: {
+                required: "Price is required"
+            }
+        }
+    });
+
+    $("#btnSave").click(function () {
+        if ($("#itemForm").valid) {
+            var imageIDs = [];
+            $("#picturesArea .image").each(function () {
+                var imageID = $(this).attr("data-id");
+                imageIDs.push(imageID);
+            });
+            $("#pictureIDs").val(imageIDs.join());
+
+            $.ajax({
+                url: "@Url.Action("AddItem", "Item")",
+                method: "post",
+                data: $("#itemForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    $('#modalCreate').modal('toggle');
+                    swal("Success!", "Property added!", "success");
+                    ReloadHomeListing();
+                    ReloadItemListing();
+                } else {
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+    });
+
+
+    $("#ItemPic").change(function () {
+        var pictures = this.files;
+        var picsData = new FormData();
+        for (var i = 0; i < pictures.length; i++) {
+            picsData.append("Picture", pictures[i]);
+        }
+
+        $.ajax({
+            url: "@Url.Action("PictureItem", "Picture")",
+            type: "post",
+            data: picsData,
+            datatype: "json",
+            processData: false,
+            contentType: false
+        }).done(function (responses) {
+            for (var i = 0; i < responses.length; i++) {
+                var picResponse = responses[i];
+                AttachNewImage(picResponse.pictureURL, picResponse.ID);
+            }
+            });
+    });
+
+    function AttachNewImage(imageURL, imageID) {
+        var $newimgHTML = $("#imageTemplate").clone();
+        $newimgHTML.find(".image").attr("src", "/images/Item/" + imageURL);
+        $newimgHTML.find(".image").attr("data-id", imageID);
+        $("#picturesArea").append($newimgHTML.html());
+        RemoveImagesOnClick();
+    }
+
+    function RemoveImagesOnClick() {
+        $("#picturesArea .image").click(function() {
+            $(this).remove();
+        });
+    }
+
+</script>

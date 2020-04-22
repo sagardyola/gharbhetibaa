@@ -1,0 +1,112 @@
+﻿@model Gharbhetibaa.Models.UserAccount
+
+@{
+    ViewBag.Title = "Login";
+}
+
+@if (TempData["ResetPass"] != null)
+{
+    <script>
+        $("document").ready(function () {
+            swal("Success!", "Password has been changed. Please login!", "success");
+        });
+    </script>
+}
+
+<section id="login">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-sm-12 col-md-5 login-box">
+                <img class="avatar" id="productImage" width="150" height="150" src="/images/Shared/DefaultUser.png" />
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h3 class="text-center">Login</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @if (TempData["UserRegister"] != null)
+                            {
+                                <p class="txt-default">Registration Successful. Please Sign in!</p>
+                            }
+                            <p class="text-danger" style="">@Html.ValidationMessage("LoginError")</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.UserName) } })
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Password) } })
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="txt-secondary">No account? </span>
+                            @Html.ActionLink("Create one!", "Register", "Account", null, new { @class = "a-default" })<br />
+                            <button class="a-default btnForgot btn p-0" data-toggle="modal" data-target="#modalForgot" type="button">Forgot password?</button>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-right">
+                                <button class="btn btn-default rounded-0" type="submit">Login</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="modalForgot" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content back-secondary" id="forgotPassword">
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(".btnForgot").click(function () {
+        $.ajax({
+            url: "@Url.Action("ForgotPassword", "Account")",
+            type: "get"
+        }).done(function (response) {
+            $("#forgotPassword").html(response);
+
+            });
+        });
+</script>

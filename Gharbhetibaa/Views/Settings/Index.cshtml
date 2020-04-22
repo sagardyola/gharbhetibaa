@@ -1,0 +1,128 @@
+﻿@model Gharbhetibaa.ViewModels.SettingsVM
+
+@{
+    ViewBag.Title = "Settings";
+}
+
+
+@if (TempData["SuccessPass"] != null)
+{
+    <script>
+        $("document").ready(function () {
+            swal("Success!", "Password Changed Successfully", "success");
+        });
+    </script>
+}
+else if (TempData["FailPass"] != null)
+{
+    <script>
+        $("document").ready(function () {
+            swal("Error!", "Old password doesnot match", "error");
+        });
+    </script>
+}
+
+
+<section id="settings">
+    <div class="container">
+        <div class="pages-box">
+            <div class="row topic-head text-center">
+                <div class="col-12">
+                    <h3>Settings</h3>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row mt-3 mb-2">
+                <div class="col-12">
+                    <h5>Change Password</h5>
+                </div>
+            </div>
+
+            @using (Html.BeginForm("ChangePassword", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row mb-3">
+                    <div class="col-6 col-md-3">
+                        @Html.LabelFor(model => model.ChangePasswordVM.OldPassword, htmlAttributes: new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-6 col-md-4">
+                        @Html.EditorFor(model => model.ChangePasswordVM.OldPassword, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.ChangePasswordVM.OldPassword) } })
+                        @Html.ValidationMessageFor(model => model.ChangePasswordVM.OldPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6 col-md-3">
+                        @Html.LabelFor(model => model.ChangePasswordVM.NewPassword, htmlAttributes: new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-6 col-md-4">
+                        @Html.EditorFor(model => model.ChangePasswordVM.NewPassword, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.ChangePasswordVM.NewPassword) } })
+                        @Html.ValidationMessageFor(model => model.ChangePasswordVM.NewPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6 col-md-3">
+                        @Html.LabelFor(model => model.ChangePasswordVM.ConfirmPassword, htmlAttributes: new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-6 col-md-4">
+                        @Html.EditorFor(model => model.ChangePasswordVM.ConfirmPassword, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.ChangePasswordVM.ConfirmPassword) } })
+                        @Html.ValidationMessageFor(model => model.ChangePasswordVM.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6 col-md-4 offset-md-3">
+                        <button class="btn btn-default rounded-0 mt-2" type="submit">Change</button>
+                    </div>
+                </div>
+            }
+
+            <div class="row mt-3 mb-4">
+                <div class="col-12">
+                    <hr />
+                    <h5>Deactivate Account</h5>
+                    <p class="lead text-justify">
+                        Deactivating your account will disable your Profile and remove your name and photo from most things that you've shared.
+                    </p>
+                    
+                    <button class="btn btn-default rounded-0 mt-2 btnDeactivate">Deactivate your account</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+    $('.btnDeactivate').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure, you want to Deactivate your account?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeactivateUser", "Account")",
+                        method: "post"
+                    }).done(function (response) {
+                        swal("Success", "Account Deactivated!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                window.location.href = "@Url.Action("Index", "Home")";
+                            });
+                    });
+
+                }
+            });
+    });
+</script>

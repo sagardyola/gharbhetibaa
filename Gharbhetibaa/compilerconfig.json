@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "Content/Site_Custom/style.css",
+    "inputFile": "Content/Site_Custom/style.scss"
+  },
+  {
+    "outputFile": "SweetAlert2/sweetalert2.css",
+    "inputFile": "SweetAlert2/sweetalert2.scss"
+  }
+]

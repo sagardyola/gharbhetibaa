@@ -1,0 +1,111 @@
+﻿@model Gharbhetibaa.ViewModels.DashboardVM
+
+
+<div id="userlisting">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                Verify Users
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.UserAccounts.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/users.png" class="w-25" />
+                        <h4>
+                            All Users Verified
+                        </h4>
+                        <h5></h5>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>User Name</th>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var i in Model.UserAccounts)
+                        {
+                            var active = i.Status == false ? "text-muted" : string.Empty;
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(i.UserName, "UserProfile", new { controller = "Account", UserName = @i.UserName }, new { @class = "a-feature" })
+                                </td>
+                                <td><span class="@active">@i.Address</span></td>
+                                <td><span class="@active">@i.Email</span></td>
+                                <td>
+                                    <div class="form-inline">
+                                        <button class="btn btn-outline-danger btnVerifyUser btn-sm" data-id="@i.UserID">
+                                            <span>Verify</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                @Html.Partial("_Pagination")
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" id="propertyContent">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("Users", "Dashboard")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#userlisting").replaceWith(response);
+            });
+    });
+
+        $('.btnVerifyUser').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("VerifyUser", "Dashboard")",
+                        method: "post",
+                        data: {
+                            UserID: $(this).attr("data-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "User Verified!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                //window.location.reload();
+                                $("#userlisting").replaceWith(response);
+                            });
+                    });
+
+                }
+            });
+    });
+    </script>
+</div>

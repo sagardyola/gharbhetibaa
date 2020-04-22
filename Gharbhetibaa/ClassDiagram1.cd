@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Gharbhetibaa.Controllers.AccountController">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <InheritanceLine Type="System.Web.Mvc.Controller" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="1.75" />
+        <Point X="10.5" Y="0.125" />
+        <Point X="1.312" Y="0.125" />
+        <Point X="1.312" Y="0.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAgAQgAAAAAAAAAIAAgQBAAAAAAEQAAAABAE=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.BookingController">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAgAAAAAgAAAAAAEAAAAAAAAQ=</HashCode>
+      <FileName>Controllers\BookingController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.DashboardController">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAAIAQQCAAQAAACAIgAAQwAACAAAAEBAEAAABA=</HashCode>
+      <FileName>Controllers\DashboardController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.EmailController">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAgAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\EmailController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.ExpenseController">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAQAAAAABAAAAAAAAAAAAAAAAEgAAAAAAA=</HashCode>
+      <FileName>Controllers\ExpenseController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.ExploreController">
+    <Position X="2.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAQAAQAAAAAAAAAAAAAAAAAAAAAAEAACAAABA=</HashCode>
+      <FileName>Controllers\ExploreController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.HomeController">
+    <Position X="6" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAQAAEAAAACAAAEAAAAAQAQKAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.ItemController">
+    <Position X="12.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAEAAEQAAQAABAAQAAAAAAgAEAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\ItemController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.MyActivityController">
+    <Position X="14" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAQoAAAAAAAAAAAQAQIAAAAAAECAAAQADA=</HashCode>
+      <FileName>Controllers\MyActivityController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.PictureController">
+    <Position X="16" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAACAAAAAAgAAAAAAAAAAAEEAAAAAAA=</HashCode>
+      <FileName>Controllers\PictureController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.PostCommentController">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAEAAAAAAAAAAEAEAACAAAAI=</HashCode>
+      <FileName>Controllers\PostCommentController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.PropertyManagementController">
+    <Position X="10.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEQAAAAAAQAAAAAAAQCAAIEAAEAAAAAABA=</HashCode>
+      <FileName>Controllers\PropertyManagementController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.SearchingForController">
+    <Position X="8.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAQAAAAAAIAACAAAAEAAQAAAAEAIAAAAAA=</HashCode>
+      <FileName>Controllers\SearchingForController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.SettingsController">
+    <Position X="16.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\SettingsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.SupplierController">
+    <Position X="16.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAACAABAAAAAAAAAAAAAAEAAAAQAAA=</HashCode>
+      <FileName>Controllers\SupplierController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.TrackPropertyController">
+    <Position X="14.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAIAAEAAABAAAA=</HashCode>
+      <FileName>Controllers\TrackPropertyController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.TrackRentDetailController">
+    <Position X="0.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAQAAAAAAACAAAAAEAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\TrackRentDetailController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.TrackTenantController">
+    <Position X="2.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAQAAAAAAAAAAAAAAAAQAAAAAEAIAAAAAA=</HashCode>
+      <FileName>Controllers\TrackTenantController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gharbhetibaa.Controllers.WishListController">
+    <Position X="12.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAQAAAAAAgAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\WishListController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Web.Mvc.Controller" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

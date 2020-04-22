@@ -1,0 +1,23 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @User.Identity.Name<i class="fas fa-caret-down ml-2 txt-default"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="navbarDropdown">
+            @Html.ActionLink("Profile", "UserProfile", new { controller = "Account", UserName = @User.Identity.Name }, new { @class = "dropdown-item" })
+            @Html.ActionLink("Edit Profile", "EditProfile", "Account", null, new { @class = "dropdown-item" })
+            @Html.ActionLink("Track Payments", "Index", "PropertyManagement", null, new { @class = "dropdown-item" })
+            @Html.ActionLink("My Activity", "Index", "MyActivity", null, new { @class = "dropdown-item" })
+            @Html.ActionLink("Settings", "Index", "Settings", null, new { @class = "dropdown-item" })
+            <div class="dropdown-divider"></div>
+            @Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "dropdown-item" })
+        </div>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        @Html.ActionLink("Login", "Login", "Account", null, new { @class = "nav-link" })
+    </li>
+}

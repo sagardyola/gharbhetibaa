@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Gharbhetibaa</title>
+    @Styles.Render("~/Content/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <!-- Navigation -->
+        <div id="navhead" class="pl-2">
+            <nav class="navbar navbar-expand-md navbar-light">
+                <div class="container-fluid">
+                    <a href='@Url.Action("Index", "Home", null)' class='navbar-brand'>
+                        <img src="/images/logo/logo-final.png" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ml-auto">
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>@Html.ActionLink("ADMIN", "Index", "Dashboard", null, new { @class = "btn btn-admin mt-2 btn-sm rounded-0" })</li>
+
+                            }
+                            <li class="nav-item">
+                                @Html.ActionLink("Explore", "Index", "Explore", null, new { @class = "nav-link" })
+                            </li>
+                            @Html.Partial("_LoginPartial")
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    @*Body section*@
+    <main>
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-fluid">
+            <div class="row sub-footer">
+                <!-- Links -->
+                <div class="col-12 col-md-2 company-info">
+                    <ul>
+                        <li>@Html.ActionLink("About Us", "About", "Home", null, new { @class = "a-secondary" })</li>
+                        <li>@Html.ActionLink("Contact Us", "ContactUs", "Home", null, new { @class = "a-secondary" })</li>
+                    </ul>
+                </div>
+
+                <div class="col-12 col-md-2 company-info pr-1">
+                    <ul>
+                        <li>@Html.ActionLink("Feedback", "Feedback", "Home", null, new { @class = "a-secondary" })</li>
+                        <li>@Html.ActionLink("Need help?", "NeedHelp", "Home", null, new { @class = "a-secondary" })</li>
+                        <li>@Html.ActionLink("Why Gharbhetibaa?", "WhyUse", "Home", null, new { @class = "a-secondary" })</li>
+                        <li>@Html.ActionLink("Privacy Policy", "Privacy", "Home", null, new { @class = "a-secondary" })</li>
+                        <li>@Html.ActionLink("Terms and Conditions", "Terms", "Home", null, new { @class = "a-secondary" })</li>
+                    </ul>
+                </div>
+
+                <!-- Follow Us -->
+                <div class="col-12 col-md-4 text-center social">
+                    <h5>Stay connected</h5>
+                    <a href="https://www.facebook.com/Sagar666"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/sagardyola"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/sagardyola/"><i class="fab fa-instagram"></i></a>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-12 col-md-4 newsletter">
+                    <form id="newsletterForm">
+                        <label for="search" class="">
+                            Sign up for your monthly update from
+                            Gharbhetibaa. Also, since you're about to give us your data, we want you to know that
+
+                            @Html.ActionLink("we care about your privacy.", "Privacy", "Home", null, new { @class = "a-default" })
+                        </label>
+                        <!-- Groups in a single line -->
+                        <div class="input-group">
+                            <input type="email" class="form-control form-control-sm" placeholder="E-mail address" name="EmailID"
+                                   id="EmailID" required>
+                            <div class="input-group-btn">
+                                <button class="btn btn-site btn-sm" id="btnNewsletter" type="button">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @*Bottom Footer*@
+            <div class="row main-footer text-center pt-3 pb-1">
+                <div class="col-12">
+                    <h6>All Rights Reserved, &copy;Copyright @DateTime.Now.Year, <span class="txt-default">Gharbhetibaa</span></h6>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @* Download SWA FILE FROM HERE *@
+    @*<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>*@
+    @Scripts.Render("~/bundles/sweetalert")
+
+    <script>
+        $('#btnNewsletter').click(function () {
+            var email = document.getElementById("EmailID").value;
+            var reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+            if (reg.test(email)) {
+                $.ajax({
+                    url: "@Url.Action("Newsletter", "Home")",
+                    async: false,
+                    method: "post",
+                    data: $("#newsletterForm").serialize()
+                }).done(function (response) {
+
+                    });
+                $('#EmailID').val('');
+                swal("Success", "Thankyou for subscribing!", {
+                    icon: "success",
+
+                }).then((value) => {
+                    window.location.reload();
+                });
+
+            } else {
+                swal("Error!", "Please enter a valid Email address!", "error");
+            }
+    });
+    </script>
+
+    @*<script>
+                $(document).ready(function(){
+            $(".dropdown").hover(
+                function() {
+                    $('.dropdown-menu', this).not('.in .dropdown-menu').stop( true, true ).slideDown("fast");
+                    $(this).toggleClass('open');
+                },
+                function() {
+                    $('.dropdown-menu', this).not('.in .dropdown-menu').stop( true, true ).slideUp("fast");
+                    $(this).toggleClass('open');
+                }
+            );
+        });
+        </script>*@
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

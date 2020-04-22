@@ -1,0 +1,123 @@
+﻿@model Gharbhetibaa.ViewModels.DashboardVM
+
+<div id="itemListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                Properties
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.ItemDetails.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/property-mgmt.png" class="w-50" />
+                        <h4 class="mt-3">
+                            No Ads posted.
+                        </h4>
+                        <h5></h5>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Posted By</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var i in Model.ItemDetails)
+                        {
+                            <tr>
+                                <td>
+                                    @using (Html.BeginForm("ItemDetails", "Item", FormMethod.Get))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="ItemID" value="@i.ItemID" />
+                                        <button type="submit" class="btn p-0 a-feature" title="View Ad Details">@i.ItemTitle</button>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.Raw((i.Location.Length > 20 ? i.Location.Substring(0, 20) : i.Location))
+                                </td>
+
+                                <td>
+                                    @{
+                                        var uName = @i.UserItemDetails.Select(a => a.UserAccount.UserName).First();
+                                    }
+                                    @Html.ActionLink(uName, "UserProfile", new { controller = "Account", UserName = uName }, new { @class = "a-feature" })
+                                </td>
+                                <td>
+                                    @if (i.AdExpiryDate.Date > DateTime.Now.Date)
+                                    {
+                                        <div class="btn btn-sm btn-success">Active</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="btn btn-sm btn-danger">Expired</div>
+                                    }
+                                </td>
+
+                                <td>
+                                    <button class="btn btnDeleteItem p-0" title="Delete Ad" data-id="@i.ItemID"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                @Html.Partial("_Pagination")
+            }
+        </div>
+    </div>
+
+
+    <script>
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("Items", "Dashboard")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#itemListing").replaceWith(response);
+            });
+    });
+
+    $('.btnDeleteItem').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteDashItem", "Item")",
+                        method: "post",
+                        data: {
+                            ItemID: $(this).data('id')
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Your Ad has been deleted!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                $("#itemListing").replaceWith(response);
+                            });
+                    });
+
+                }
+            });
+    });
+    </script>
+</div>

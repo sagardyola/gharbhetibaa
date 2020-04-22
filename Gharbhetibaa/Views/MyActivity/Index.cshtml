@@ -1,0 +1,215 @@
+﻿@model Gharbhetibaa.ViewModels.ItemData
+
+@{
+    ViewBag.Title = "My Activity";
+}
+
+@if (Model.UserAccount.IsVerified == false)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            swal("Account not Verified", "Some of the features have been disabled as your account has not been verified yet!", {
+                icon: "error",
+            })
+            $('.btnAddItem').attr('disabled', true)
+            $('.btnAddSearching').attr('disabled', true)
+        });
+    </script>
+}
+
+<section id="myactivity">
+    <div class="container">
+        <div class="pages-box">
+            <div class="row topic-head text-center">
+                <div class="col-12">
+                    <h3>My Activity</h3>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row text-right mb-2">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-sm btn-feature btnAddItem" data-toggle="modal" data-target="#modalCreate">
+                        <i class="fas fa-plus mr-2 txt-default"></i>Post an Ad?
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-feature btnAddSearching" data-toggle="modal" data-target="#modalCreate">
+                        <i class="fas fa-plus mr-2 txt-default"></i>Anything in your Search Wish?
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-3 content-menu">
+                    <button class="btn-accordion" id="activity-home"><i class="fas fa-home"></i>Home</button>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-list"></i>My Listings</button>
+                    <div class="accordion-content">
+                        <a href="#" id="listing-item" class="btn w-100 text-left">My Ads</a>
+                        <br />
+                        <a href="#" id="listing-searchingfor" class="btn w-100 text-left">Search Wish</a>
+                    </div>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-sticky-note"></i>My Wishlists</button>
+                    <div class="accordion-content">
+                        <a href="#" id="wishlist-item" class="btn w-100 text-left">Ads</a>
+                        <br />
+                        <a href="#" id="wishlist-searchingfor" class="btn w-100 text-left">Search Wish</a>
+                    </div>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-calendar-check"></i>My Bookings</button>
+                    <div class="accordion-content">
+                        <a href="#" id="booking-item" class="btn w-100 text-left">Ads</a>
+                        <br />
+                        <a href="#" id="booking-searchingfor" class="btn w-100 text-left">Search Wish</a>
+                    </div>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-comments"></i>My Comments</button>
+                    <div class="accordion-content">
+                        <a href="#" id="comment-item" class="btn w-100 text-left">Ads</a>
+                        <br />
+                        <a href="#" id="comment-searchingfor" class="btn w-100 text-left">Search Wish</a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-9" id="activity-content">
+                    <!-- Website Overview -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content back-secondary" id="contentCreate">
+
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/Site_Custom/accordion")
+
+
+<script>
+
+    $("#activity-home").click(function (){
+        $.ajax({
+            url: "@Url.Action("Home", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+
+    $("#listing-item").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyItems", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+    $("#listing-searchingfor").click(function (){
+        $.ajax({
+            url: "@Url.Action("MySearchingFors", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+    $("#wishlist-item").click(function (){
+        $.ajax({
+            url: "@Url.Action("WishListItems", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+    $("#wishlist-searchingfor").click(function (){
+        $.ajax({
+            url: "@Url.Action("WishListSearchingFors", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+
+
+    $("#booking-item").click(function (){
+        $.ajax({
+            url: "@Url.Action("BookingItems", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+
+    $("#booking-searchingfor").click(function (){
+        $.ajax({
+            url: "@Url.Action("BookingSearchingFors", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+
+
+    $("#comment-item").click(function (){
+        $.ajax({
+            url: "@Url.Action("CommentItems", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+
+    $("#comment-searchingfor").click(function (){
+        $.ajax({
+            url: "@Url.Action("CommentSearchingFors", "MyActivity")",
+            type: "get"
+        }).done(function (response) {
+            $("#activity-content").html(response);
+
+            });
+    });
+
+    //Trigger home button on load
+    $(document).ready(function () {
+        $("#activity-home").click();
+    });
+
+        $(".btnAddItem").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddItem", "Item")",
+            type: "get"
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+        $(".btnAddSearching").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddSearchingFor", "SearchingFor")",
+            type: "get"
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+</script>
+

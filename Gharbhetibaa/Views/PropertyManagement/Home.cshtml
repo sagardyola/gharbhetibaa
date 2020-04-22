@@ -1,0 +1,67 @@
+﻿@model Gharbhetibaa.ViewModels.TrackPaymentsVM
+
+<section id="trackpaymentshome">
+    <div class="row text-center mt-3">
+        <div class="col-6 col-md-4 dash-outer">
+            <div class="dash-inner border">
+                <h3>@Model.PropertyAdded</h3>
+                Property Owned
+            </div>
+        </div>
+        <div class="col-6 col-md-4 dash-outer">
+            <div class="dash-inner border">
+                <h3>@Model.TenantAdded</h3>
+                Tenants Added
+            </div>
+        </div>
+        <div class="col-6 col-md-4 dash-outer">
+            <div class="dash-inner border">
+                <h3>@Model.SupplierAdded</h3>
+                Suppliers Added
+            </div>
+        </div>
+    </div>
+    <div class="row text-center mt-3 mb-4">
+        <div class="col-6 col-md-4 dash-outer">
+            <div class="dash-inner border">
+                <h3>Rs. @Model.Income</h3>
+                Total Income
+            </div>
+        </div>
+        <div class="col-6 col-md-4 dash-outer">
+            <div class="dash-inner border">
+                <h3>Rs. @Model.Expense</h3>
+                Total Expense
+            </div>
+        </div>
+        <div class="col-6 col-md-4 dash-outer">
+            <div class="dash-inner border">
+                <h3>
+                    @{
+                        double? total = @Model.Income - @Model.Expense;
+                    }
+                    Rs. @total
+                </h3>
+                Earning
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-12">
+            <img src="~/images/Shared/building.png" class="img-fluid" />
+        </div>
+    </div>
+
+
+    <script>
+        function ReloadHomeListing() {
+            $.ajax({
+                url: "@Url.Action("Home", "PropertyManagement")",
+                method: "get"
+            }).done(function (response) {
+                $("#trackpaymentshome").replaceWith(response);
+            });
+        }
+    </script>
+</section>

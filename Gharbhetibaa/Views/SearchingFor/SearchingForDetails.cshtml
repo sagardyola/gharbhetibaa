@@ -1,0 +1,223 @@
+﻿@model Gharbhetibaa.ViewModels.SearchingForVM
+
+@{
+    ViewBag.Title = "Search Wish Details";
+}
+
+<section id="itemdetails">
+    <div class="container">
+        <div class="pages-box">
+            @foreach (var i in Model.SearchingFors)
+            {
+                <div class="row topic-head text-center">
+                    <div class="col-12">
+                        <h3>@i.Title</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6 col-md-3 offset-md-3">
+                        @Html.LabelFor(model => i.PriceRange, htmlAttributes: new { @class = "" })
+                    </div>
+                    <div class="col-6 col-md-3">
+                        Rs. @i.PriceRange
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 col-md-3 offset-md-3">
+                        @Html.LabelFor(model => i.Location, htmlAttributes: new { @class = "" })
+                    </div>
+                    <div class="col-6 col-md-3">
+                        @i.LocationCity
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 col-md-3 offset-md-3">
+                        @Html.LabelFor(model => i.Description, htmlAttributes: new { @class = "" })
+                    </div>
+                    <div class="col-6 col-md-3">
+                        @i.Description
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 col-md-3 offset-md-3">
+                        @Html.LabelFor(model => i.PostedOn, htmlAttributes: new { @class = "" })
+                    </div>
+                    <div class="col-6 col-md-3">
+                        @i.PostedOn.ToString("MM/dd/yyyy")
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 col-md-3 offset-md-3">
+                        Added by
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <b>
+                            @Html.ActionLink(Model.UserAccount.UserName, "UserProfile", new { controller = "Account", UserName = Model.UserAccount.UserName }, new { @class = "a-feature" })
+                        </b>
+                    </div>
+                </div>
+
+                if (!Model.UserAccount.UserName.Equals(@User.Identity.Name))
+                {
+                    <hr />
+                    <div class="row">
+
+                        <div class="col-6 col-md-3 offset-md-3">
+                            @using (Html.BeginForm("SearchingWishList", "WishList", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <input type="hidden" name="SearchingForID" value="@i.SearchingForID" />
+
+                                if (ViewBag.WishListSuccess == true)
+                                {
+                                    <button class="btn btn-outline-light border-0 txt-primary" type="submit">
+                                        <i class="fas fa-bookmark txt-feature mr-1"></i>
+                                        WishListed
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-light border-0 txt-primary" type="submit">
+                                        <i class="far fa-bookmark mr-1"></i>
+                                        Add to WishList?
+                                    </button>
+                                }
+                            }
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            @using (Html.BeginForm("SearchingBooking", "Booking", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <input type="hidden" name="SearchingForID" value="@i.SearchingForID" />
+                                if (ViewBag.BookingSuccess == true)
+                                {
+                                    <button class="btn btn-outline-light border-0 txt-primary" type="submit">
+                                        <i class="fas fa-check-circle txt-feature mr-1"></i>
+                                        Booked
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-light border-0 txt-primary" type="submit">
+                                        <i class="far fa-check-circle mr-1"></i>
+                                        Book?
+                                    </button>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+
+
+                using (Ajax.BeginForm("SearchingComment", "PostComment", new AjaxOptions { HttpMethod = "POST", OnSuccess = "onAjaxRequestSuccess" }, new { @id = "commentForm", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <hr />
+                    <div class="row mb-3 text-right mt-4">
+                        <div class="col-6">
+                            @Html.TextAreaFor(model => model.CommentSearching.CommentTitle, htmlAttributes: new { @class = "form-control rounded-0 cmntSearching", @placeholder = @Html.DisplayNameFor(n => n.CommentSearching.CommentTitle), @rows = 2 })
+                            @Html.ValidationMessageFor(model => model.CommentSearching.CommentTitle, "", new { @class = "text-danger" })
+
+                            <input type="hidden" name="SearchingForID" value="@i.SearchingForID" />
+                            <button class="btn btn-primary rounded-0 mt-2" type="submit" id="btnComment">Comment</button>
+                        </div>
+                    </div>
+                }
+
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        @foreach (var n in Model.CommentSearchings)
+                        {
+                            var imageURL = !string.IsNullOrEmpty(n.UserAccount.ImageURL) ? "/images/UserAccount/" + n.UserAccount.ImageURL : "/images/Shared/DefaultUser.png";
+
+                            <div class="media">
+                                <img class="avatar" id="productImage" width="35" height="35" src="@imageURL" />
+                                <div class="media-body ml-3">
+                                    @Html.ActionLink(@n.UserAccount.UserName, "UserProfile", new { controller = "Account", UserName = @n.UserAccount.UserName }, new { @class = "a-feature" })
+
+                                    @n.CommentTitle
+                                    @if (n.UserAccount.UserName == @User.Identity.Name)
+                                    {
+                                        <button type="button" class="btn btnDeleteComment pt-0 pb-0" title="Delete Comment" data-id="@n.SearchingForID" cmnt-id="@n.CommentID"><i class="fas fa-trash-alt"></i></button>
+                                    }
+                                    <br>
+                                    <small class="text-muted">
+                                        @n.CommentedOn
+                                    </small>
+                                </div>
+                            </div>
+                            <br />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+
+
+<script>
+    $("#btnComment").click(function (){
+        $.ajax({
+            url: "@Url.Action("SearchingComment", "PostComment")",
+            type: "post",
+            data: $("#commentForm").serialize()
+        }).done(function (response) {
+
+            if (response.Success) {
+                $(".cmntSearching").val('');
+                window.location.reload();
+            } else {
+
+
+                }
+            }).fail(function () {
+
+
+            });
+    });
+
+    $('.btnDeleteComment').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteSearchingComment", "PostComment")",
+                        method: "post",
+                        data: {
+                            SearchingForID: $(this).attr("data-id"),
+                            CommentID: $(this).attr("cmnt-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Comment has been removed!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                window.location.reload();
+                                
+                            });
+                    });
+
+                }
+            });
+    });
+</script>

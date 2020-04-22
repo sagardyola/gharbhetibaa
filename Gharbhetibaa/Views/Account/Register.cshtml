@@ -1,0 +1,91 @@
+﻿@model Gharbhetibaa.ViewModels.RegisterVM
+@{
+    ViewBag.Title = "Register";
+}
+
+
+<section id="register">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-sm-12 col-md-5 login-box">
+                <img class="avatar" id="productImage" width="150" height="150" src="/images/Shared/DefaultUser.png" />
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h3 class="text-center">Register</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @if (TempData["UsernameChk"] != null)
+                            {
+                                <p class="text-danger">Username not available.</p>
+                            }
+                            else if (TempData["EmailChk"] != null)
+                            {
+                                <p class="text-danger">Email is not available.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.UserName) } })
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.FirstName) } })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.LastName) } })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Address) } })
+                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Email) } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Password) } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.ConfirmPassword) } })
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-right">
+                                <button class="btn btn-default rounded-0" type="submit">Register</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

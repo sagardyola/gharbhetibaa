@@ -1,0 +1,152 @@
+﻿@model Gharbhetibaa.ViewModels.PropertyManagementVM
+
+<div id="supplierListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                My Suppliers
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Supplier.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/no_suppliers.png" class="w-25" />
+
+                        <h4>
+                            No Suppliers Added
+                        </h4>
+                        <h5>You can store all your frequently contacted contractors and suppliers here. Add their phone number and email to make it easier to contact them.</h5>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Profession</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var i in Model.Supplier)
+                        {
+                        <tr>
+                            <td>
+                                <button class="btn btnSupplierDetails a-feature p-0" title="View Supplier Details" data-id="@i.SupplierID" data-toggle="modal" data-target="#formModal">@i.SupplierName</button>
+                            </td>
+                            <td>@i.Profession</td>
+                            <td>@i.MobileNumber</td>
+                            <td>@i.EmailAddress</td>
+                            <td>@i.Address</td>
+                            <td>
+                                <div class="form-inline">
+                                    <button type="button" class="btn pt-0 pb-0 btnEditSupplier" title="Edit Supplier" data-id="@i.SupplierID" data-toggle="modal" data-target="#modalCreate"><i class="fas fa-edit"></i></button>
+
+                                    <button class="btn btnDeleteSupplier pt-0 pb-0" title="Delete Supplier" data-id="@i.SupplierID"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    </table>
+                </div>
+                @Html.Partial("_Pagination")
+            }
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content back-secondary" id="supplierContent">
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(".btnEditSupplier").click(function (){
+        $.ajax({
+            url: "@Url.Action("EditSupplier", "Supplier")",
+            type: "get",
+            data: {
+                SupplierID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+          $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("MySuppliers", "PropertyManagement")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#supplierListing").replaceWith(response);
+            });
+    });
+
+    $(".btnSupplierDetails").click(function (){
+        $.ajax({
+            url: "@Url.Action("Index", "Supplier")",
+            method: "get",
+            data: {
+                SupplierID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#supplierContent").html(response);
+
+            });
+    });
+
+
+
+    $('.btnDeleteSupplier').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteSupplier", "Supplier")",
+                        method: "post",
+                        data: {
+                            SupplierID: $(this).attr("data-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Supplier has been deleted!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                $("#supplierListing").replaceWith(response);
+                            });
+                    });
+
+                }
+            });
+        });
+
+        function ReloadSupplierListing() {
+            $.ajax({
+                url: "@Url.Action("MySuppliers", "PropertyManagement")",
+                method: "get"
+            }).done(function (response) {
+                    $("#supplierListing").replaceWith(response);
+                });
+        }
+    </script>
+</div>

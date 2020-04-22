@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Gharbhetibaa.Models.Booking.BookingItem>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLongTitle">@TempData["SuccessTitle"]</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <section id="mybookings">
+        <div class="container">
+            @if (ViewBag.BookItemCount == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/oops.png" />
+                        <h3>No one has booked yet!!!</h3>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card mb-3" style="border:1px solid black;">
+                    <div class="card-header back-primary">
+                        <h5 class="card-title text-center txt-secondary">
+                            Booked by
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                            </tr>
+                            @foreach (var i in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(@i.UserAccount.UserName, "UserProfile", new { controller = "Account", UserName = @i.UserAccount.UserName }, new { @class = "a-feature" })
+                                    </td>
+                                    <td>@i.UserAccount.FullName</td>
+                                    <td>@i.UserAccount.Email</td>
+                                    <td>@i.UserAccount.MobileNumber</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>

@@ -1,0 +1,95 @@
+﻿@model Gharbhetibaa.Models.ContactUs
+
+@{
+    ViewBag.Title = "Contact Us";
+}
+
+@if (TempData["SuccessContactUs"] != null)
+{
+    <script>
+        $("document").ready(function () {
+            swal("Thankyou!", "We will contact you shortly", "success");
+        });
+    </script>
+}
+
+<section id="feedback">
+    <div class="container">
+        <div class="pages-box">
+            <div class="row topic-head text-center">
+                <div class="col-12">
+                    <h3>Contact Us</h3>
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <p>
+                        Whether you have a question about features, pricings, or anything else, our team is ready to answer all your questions.
+                    </p>
+                    <p>
+                        We'd love to hear from you.
+                    </p>
+                    <p>
+                        <span class="text-danger font-weight-bold">*</span> Indicates required field
+                    </p>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    @using (Html.BeginForm("ContactUs", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="row mb-3">
+                            <div class="col-sm-2 offset-sm-1">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Name) } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-2 offset-sm-1">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Email) } })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-2 offset-sm-1">
+                                @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Subject) } })
+                                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-2 offset-sm-1">
+                                @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.TextAreaFor(model => model.Message, htmlAttributes: new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Message), @rows = 3 })
+                                @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6 offset-sm-3">
+                                <button class="btn btn-secondary rounded-0" type="reset">Clear</button>
+                                <button class="btn btn-primary rounded-0" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

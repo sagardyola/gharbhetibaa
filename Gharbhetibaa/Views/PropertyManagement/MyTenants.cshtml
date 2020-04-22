@@ -1,0 +1,273 @@
+﻿@model Gharbhetibaa.ViewModels.PropertyManagementVM
+
+<div id="tenantListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                My Tenants
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-2">
+                    <div class="col-form-label font-weight-bold">Filter by</div>
+                </div>
+                <div class="col-10">
+                    @using (Html.BeginForm("MyTenants", "PropertyManagement", FormMethod.Get))
+                    {
+                        @Html.DropDownList("PropertyID", null, "Select Property", htmlAttributes: new { @class = "form-control rounded-0" })
+                    }
+                </div>
+            </div>
+
+            @if (Model.Tenants.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/no_tenants.png" class="w-25" />
+                        <h4>
+                            No Tenants Added
+                        </h4>
+                        <h5>You can add a new tenant and then assign it to a property on the property dashboard after you have added a lease.</h5>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Property</th>
+                            <th>Date Joined</th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var x in Model.Tenants)
+                        {
+                            <tr>
+                                <td>
+                                    <button class="btn a-feature btnTenantDetails p-0" title="View Tenant Details" data-id="@x.TenantID" data-toggle="modal" data-target="#formModal">@x.TenantName</button>
+                                </td>
+                                <td>@x.TenantMobile</td>
+                                <td>
+                                    @foreach (var y in Model.UserTenants)
+                                    {
+                                        if (x.TenantID == y.TenantID)
+                                        {
+                                            <button class="btn a-feature btnPropertyDetails p-0" title="View Property Details" data-id="@y.Property.PropertyID" data-toggle="modal" data-target="#formModal">@y.Property.Title</button>
+                                        }
+                                    }
+                                </td>
+                                <td>@x.DateJoined.ToString("MM/dd/yyyy")</td>
+                                <td>
+                                    <div class="form-inline">
+
+
+                                        @foreach (var y in Model.UserTenants)
+                                        {
+                                            if (x.TenantID == y.TenantID)
+                                            {
+                                                using (Html.BeginForm("Index", "TrackRentDetail", FormMethod.Get))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="PropertyID" value="@y.Property.PropertyID" />
+                                                    <input type="hidden" name="TenantID" value="@x.TenantID" />
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm" title="Rent Details">Rent Details</button>
+                                                }
+                                            }
+                                        }
+
+                                        <button type="button" class="btn pt-0 pb-0 btnEditTenant" title="Edit Tenant Details" data-id="@x.TenantID" data-toggle="modal" data-target="#modalCreate"><i class="fas fa-edit"></i></button>
+                                        @foreach (var y in Model.UserTenants)
+                                        {
+                                            if (x.TenantID == y.TenantID)
+                                            {
+                                                <button class="btn btnDeleteTenant pt-0 pb-0" title="Delete Tenant" p-id="@y.Property.PropertyID" t-id="@x.TenantID"><i class="fas fa-trash-alt"></i></button>
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                if (Model.Pager != null && Model.Pager.TotalPages > 0)
+                {
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    @if (Model.Pager.CurrentPage == 1)
+                                    {
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#">Previous</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            @{
+                                                var btnprev = @Model.Pager.CurrentPage - 1;
+                                            }
+                                            <button class="page-link pager-site" type="button" data-id="@btnprev" p-id="@Model.PropertyID">Previous</button>
+                                        </li>
+                                    }
+
+                                    @for (int page = Model.Pager.StartPage; page < Model.Pager.EndPage + 1; page++)
+                                    {
+                                        var active = page == Model.Pager.CurrentPage ? "active" : string.Empty;
+                                        <li class="page-item @active">
+                                            <button class="page-link pager-site" type="button" data-id="@page" p-id="@Model.PropertyID">
+                                                @page
+                                            </button>
+                                        </li>
+                                    }
+
+                                    @if (Model.Pager.CurrentPage == Model.Pager.EndPage)
+                                    {
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            @{
+                                                var btnNext = @Model.Pager.CurrentPage + 1;
+                                            }
+
+                                            <button class="page-link pager-site" type="button" data-id="@btnNext" p-id="@Model.PropertyID">Next</button>
+                                        </li>
+                                    }
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                }
+
+            }
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content back-secondary" id="propertyContent">
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+           $(".btnEditTenant").click(function (){
+        $.ajax({
+            url: "@Url.Action("EditTenant", "TrackTenant")",
+            type: "get",
+            data: {
+                TenantID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+        $("#PropertyID").change(function () {
+            $.ajax({
+            url: "@Url.Action("MyTenants", "PropertyManagement")",
+            type: "get",
+            data: {
+                PropertyID: $(this).val()
+            }
+        }).done(function (response) {
+            $("#tenantListing").replaceWith(response);
+
+            });
+        });
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyTenants", "PropertyManagement")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id"),
+                PropertyID: $(this).attr("p-id")
+            }
+        }).done(function (response) {
+            $("#tenantListing").replaceWith(response);
+            });
+    });
+
+
+            $(".btnTenantDetails").click(function (){
+        $.ajax({
+            url: "@Url.Action("Index", "TrackTenant")",
+            type: "get",
+            data: {
+                TenantID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#propertyContent").html(response);
+
+            });
+    });
+
+
+    $(".btnPropertyDetails").click(function (){
+        $.ajax({
+            url: "@Url.Action("Index", "TrackProperty")",
+            type: "get",
+            data: {
+                PropertyID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#propertyContent").html(response);
+
+            });
+    });
+
+
+    $('.btnDeleteTenant').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteTenant", "TrackTenant")",
+                        method: "post",
+                        data: {
+                            PropertyID: $(this).attr("p-id"),
+                            TenantID: $(this).attr("t-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Tenant has been deleted!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                $("#tenantListing").replaceWith(response);
+                            });
+                    });
+                }
+            });
+        });
+
+        function ReloadTenantListing() {
+            $.ajax({
+                url: "@Url.Action("MyTenants", "PropertyManagement")",
+                method: "get"
+            }).done(function (response) {
+                $("#tenantListing").replaceWith(response);
+
+            });
+        }
+    </script>
+</div>

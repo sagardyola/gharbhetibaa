@@ -1,0 +1,156 @@
+﻿@model Gharbhetibaa.ViewModels.DashboardVM
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<section id="dashboard">
+    <div class="container">
+        <div class="pages-box">
+            <div class="row topic-head text-center">
+                <div class="col-12">
+                    <h3>Dashboard</h3>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3 content-menu">
+                    <button class="btn-accordion" id="dash-home"><i class="fas fa-home"></i>Home</button>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-user-circle"></i>User</button>
+                    <div class="accordion-content">
+                        <a href="#" id="dash-user" class="btn w-100 text-left">User Status</a>
+                        <br />
+                        <a href="#" id="dash-verifyuser" class="btn w-100 text-left">Verify Users</a>
+                    </div>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-star"></i>Promotions</button>
+                    <div class="accordion-content">
+                        <a href="#" id="dash-feature-item" class="btn w-100 text-left">Featured Ads</a>
+                    </div>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-sticky-note"></i>Posts</button>
+                    <div class="accordion-content">
+                        <a href="#" id="dash-item" class="btn w-100 text-left">Ads</a>
+                        <br />
+                        <a href="#" id="dash-searchingfor" class="btn w-100 text-left">Search Wish</a>
+                    </div>
+
+                    <button class="accordion btn-accordion"><i class="fas fa-tasks"></i>Others</button>
+                    <div class="accordion-content">
+                        <a href="#" id="dash-contacted" class="btn w-100 text-left">Contacted</a>
+                        <br />
+                        <a href="#" id="dash-feedback" class="btn w-100 text-left">Feedbacks</a>
+                        <br />
+                        <a href="#" id="dash-newsletters" class="btn w-100 text-left">Newsletters</a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-9" id="dashboard-content">
+                    <!-- Website Overview -->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@Scripts.Render("~/bundles/Site_Custom/accordion")
+
+<script>
+    $("#dash-home").click(function (){
+        $.ajax({
+            url: "@Url.Action("Home", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-user").click(function (){
+        $.ajax({
+            url: "@Url.Action("Users", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+        $("#dash-verifyuser").click(function (){
+        $.ajax({
+            url: "@Url.Action("VerifyUsers", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-feature-item").click(function (){
+        $.ajax({
+            url: "@Url.Action("FeaturedItems", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-item").click(function (){
+        $.ajax({
+            url: "@Url.Action("Items", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-searchingfor").click(function (){
+        $.ajax({
+            url: "@Url.Action("SearchingFor", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-contacted").click(function (){
+        $.ajax({
+            url: "@Url.Action("Contacted", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-feedback").click(function (){
+        $.ajax({
+            url: "@Url.Action("Feedbacks", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    $("#dash-newsletters").click(function (){
+        $.ajax({
+            url: "@Url.Action("Newsletters", "Dashboard")",
+            type: "get"
+        }).done(function (response) {
+            $("#dashboard-content").html(response);
+
+            });
+    });
+
+    //Trigger home button on load
+    $(document).ready(function () {
+        $("#dash-home").click();
+    });
+</script>

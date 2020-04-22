@@ -1,0 +1,152 @@
+﻿@model Gharbhetibaa.ViewModels.PropertyManagementVM
+
+@{
+    ViewBag.Title = "Track Payments";
+}
+
+@if (Model.UserAccount.IsVerified == false)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            swal("Account not Verified", "Some of the features have been disabled as your account has not been verified yet!", {
+                icon: "error",
+            })
+            $('.btnAddProperty').attr('disabled', true)
+            $('.btnAddSupplier').attr('disabled', true)
+        });
+    </script>
+
+}
+
+<section id="propertymanagement">
+    <div class="container">
+        <div class="pages-box">
+            <div class="row topic-head text-center">
+                <div class="col-12">
+                    <h3>Property Management</h3>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="row text-right mb-2">
+                <div class="col-12">
+                    <button type="button" class="btn btn-sm btn-feature btnAddProperty" data-toggle="modal" data-target="#modalCreate">
+                        <i class="fas fa-plus mr-2 txt-default"></i>Add a Property?
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-feature btnAddSupplier" data-toggle="modal" data-target="#modalCreate">
+                        <i class="fas fa-plus mr-2 txt-default"></i>Add a Supplier?
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3 content-menu">
+                    <button class="btn-accordion" id="payment-home"><i class="fas fa-home"></i>Home</button>
+                    <button class="btn-accordion" id="my-properties"><i class="fas fa-hotel"></i>My Properties</button>
+                    <button class="btn-accordion" id="my-tenants"><i class="fas fa-user-friends"></i>My Tenants</button>
+                    <button class="btn-accordion" id="my-expenses"><i class="fas fa-wallet"></i>My Expenses</button>
+                    <button class="btn-accordion" id="my-suppliers"><i class="fas fa-tools"></i>My Suppliers</button>
+                </div>
+                <div class="col-12 col-md-9" id="payment-content">
+                    <!-- Website Overview -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content back-secondary" id="contentCreate">
+
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/Site_Custom/accordion")
+
+<script>
+
+    $("#payment-home").click(function (){
+        $.ajax({
+            url: "@Url.Action("Home", "PropertyManagement")",
+            type: "get"
+        }).done(function (response) {
+            $("#payment-content").html(response);
+
+            });
+    });
+
+
+    $("#my-properties").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyProperties", "PropertyManagement")",
+            type: "get"
+        }).done(function (response) {
+            $("#payment-content").html(response);
+
+            });
+    });
+
+    $("#my-tenants").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyTenants", "PropertyManagement")",
+            type: "get"
+        }).done(function (response) {
+            $("#payment-content").html(response);
+
+            });
+    });
+
+    $("#my-expenses").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyExpenses", "PropertyManagement")",
+            type: "get"
+        }).done(function (response) {
+            $("#payment-content").html(response);
+
+            });
+    });
+
+
+    $("#my-suppliers").click(function (){
+        $.ajax({
+            url: "@Url.Action("MySuppliers", "PropertyManagement")",
+            type: "get"
+        }).done(function (response) {
+            $("#payment-content").html(response);
+
+            });
+    });
+
+    //Trigger home button on load
+    $(document).ready(function () {
+        $("#payment-home").click();
+    });
+
+
+
+    $(".btnAddProperty").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddProperty", "TrackProperty")",
+            type: "get"
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+    $(".btnAddSupplier").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddSupplier", "Supplier")",
+            type: "get"
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+
+</script>
+

@@ -1,0 +1,141 @@
+﻿@model Gharbhetibaa.ViewModels.DashboardVM
+
+<section id="dashboardhome">
+    <div class="row text-center mt-2 mb-3 pl-3 pr-3">
+        <div class="col-12 col-md-4 dash-outer">
+            <div class="row dash-inner text-white" style="background-color: #1D2731">
+                <div class="col-6">
+                    <i class="fas fa-users"></i><br />
+                    <div class="mt-2">Users</div>
+                </div>
+                <div class="col-6">
+                    <h3 class="mt-4">@Model.CountUser</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4 dash-outer">
+            <div class="row dash-inner text-white" style="background-color: #0B3C5D">
+                <div class="col-6">
+                    <i class="fas fa-address-book"></i><br />
+                    <div class="mt-2">Contacted</div>
+                </div>
+                <div class="col-6">
+                    <h3 class="mt-4">@Model.CountContacted</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4 dash-outer">
+            <div class="row dash-inner text-white" style="background-color: #328CC1">
+                <div class="col-6">
+                    <i class="fas fa-envelope"></i><br />
+                    <div class="mt-2">Subscribed</div>
+                </div>
+                <div class="col-6">
+                    <h3 class="mt-4">@Model.CountNewsletter</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center mb-2">
+            <div class="col-6 col-md-3 dash-outer">
+                <div class="dash-inner" style="background-color: #5AD3D1">
+                    <h3>@Model.CountActive</h3>
+                    Active Users
+                </div>
+            </div>
+            <div class="col-6 col-md-3 dash-outer">
+                <div class="dash-inner" style="background-color: #A8B3C5">
+                    <h3>@Model.CountVerified</h3>
+                    Verified Users
+                </div>
+            </div>
+            <div class="col-6 col-md-3 dash-outer">
+                <div class="dash-inner" style="background-color: #FFC870">
+                    <h3>@Model.CountItem</h3>
+                    Total Ads
+                </div>
+            </div>
+            <div class="col-6 col-md-3 dash-outer">
+                <div class="dash-inner" style="background-color: #949FB1">
+                    <h3>@Model.CountSearching</h3>
+                    Total Search Wish
+                </div>
+            </div>
+        </div>
+
+    <div class="row mb-2">
+        <div class="col-12">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 col-md-6">
+            <canvas id="pieChartActiveUsers"></canvas>
+        </div>
+        <div class="col-12 col-md-6">
+            <canvas id="pieChartVerifiedUsers"></canvas>
+        </div>
+    </div>
+
+    <div class="row mb-4 mt-4">
+        <div class="col-12 col-md-6">
+            <canvas id="pieChartItems"></canvas>
+        </div>
+    </div>
+
+</section>
+
+@Scripts.Render("~/bundles/Site_Custom/bootstrapgraph")
+<script>
+    //pie for users
+    var ctxP = document.getElementById("pieChartActiveUsers").getContext('2d');
+    var myPieChartActiveUsers = new Chart(ctxP, {
+        type: 'pie',
+        data: {
+            labels: ["Active Users", "Inactive Users"],
+            datasets: [{
+                data: [@Model.CountActive, @Model.CountInactive],
+                backgroundColor: ["#46BFBD", "#F7464A"],
+                hoverBackgroundColor: ["#5AD3D1", "#FF5A5E"]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    //pie for verified users
+    var ctxP2 = document.getElementById("pieChartVerifiedUsers").getContext('2d');
+    var myPieChartVerifiedUsers = new Chart(ctxP2, {
+        type: 'pie',
+        data: {
+            labels: ["Verified Users", "Non-Verified Users"],
+            datasets: [{
+                data: [@Model.CountVerified, @Model.CountNonVerified],
+                backgroundColor: ["#616774", "#F7464A"],
+                hoverBackgroundColor: ["#A8B3C5", "#FF5A5E"]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    //pie for items
+    var ctxP3 = document.getElementById("pieChartItems").getContext('2d');
+    var myPieChartItems = new Chart(ctxP3, {
+        type: 'pie',
+        data: {
+            labels: ["Ads", "Search Wish"],
+            datasets: [{
+                data: [@Model.CountItem, @Model.CountSearching],
+                backgroundColor: ["#FDB45C", "#4D5360"],
+                hoverBackgroundColor: ["#FFC870", "#949FB1"]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>

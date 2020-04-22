@@ -1,0 +1,222 @@
+﻿@model Gharbhetibaa.Models.PropertyManagement.Tenant
+
+<div class="modal-header">
+    <h5 class="modal-title text-white" id="exampleModalLongTitle">Edit Tenant</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+</div>
+<div class="modal-body bg-white">
+    <div class="container mt-2">
+        <div class="row mb-3">
+            <div class="col-12 offset-md-1">
+                <span class="text-danger font-weight-bold">*</span> Indicates required field
+            </div>
+        </div>
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "tenantForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.HiddenFor(model => model.TenantID)
+
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.TenantName, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.EditorFor(model => model.TenantName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.TenantName) } })
+                @Html.ValidationMessageFor(model => model.TenantName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.TenantAddress, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.EditorFor(model => model.TenantAddress, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.TenantAddress) } })
+                @Html.ValidationMessageFor(model => model.TenantAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.TenantMobile, htmlAttributes: new { @class = "col-form-label" })
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.EditorFor(model => model.TenantMobile, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.TenantMobile) } })
+                @Html.ValidationMessageFor(model => model.TenantMobile, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.TenantEmail, htmlAttributes: new { @class = "col-form-label" })
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.EditorFor(model => model.TenantEmail, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.TenantEmail) } })
+                @Html.ValidationMessageFor(model => model.TenantEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.DateJoined, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.EditorFor(model => model.DateJoined, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.DateJoined) } })
+                @Html.ValidationMessageFor(model => model.DateJoined, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.NationalityID, htmlAttributes: new { @class = "col-form-label" })
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.EditorFor(model => model.NationalityID, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.NationalityID) } })
+                @Html.ValidationMessageFor(model => model.NationalityID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                @Html.LabelFor(model => model.TenantNotes, htmlAttributes: new { @class = "col-form-label" })
+            </div>
+            <div class="col-8 col-md-7">
+                @Html.TextAreaFor(model => model.TenantNotes, new { @class = "form-control rounded-0", @rows = 3, @placeholder = @Html.DisplayNameFor(n => n.TenantNotes) })
+                @Html.ValidationMessageFor(model => model.TenantNotes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 col-md-3 offset-md-1">
+                <div class="col-form-label">Contract Document</div>
+            </div>
+            <div class="col-8 col-md-7">
+                <input id="ContractPic" class="rounded-0 mt-2" name="PictureItems" type="file" accept="image/*" multiple />
+            </div>
+        </div>
+            <div class="row mb-3">
+                <div class="col-12" id="picturesArea">
+
+                    @if (Model.PictureContractDocs != null && Model.PictureContractDocs.Count > 0)
+                    {
+                        foreach (var picture in Model.PictureContractDocs)
+                        {
+                            <img class='image img-fluid' style='width: 25%;' src='/images/ContractDocuments/@picture.Picture.ImageLocation' data-id="@picture.ImageID" />
+                        }
+                    }
+                </div>
+                <input type="hidden" name="ContractPic" id="pictureIDs" />
+            </div>
+        }
+    </div>
+</div>
+<div class="modal-footer back-light">
+    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+    <button class="btn btn-primary rounded-0" id="btnSave" type="button">Save</button>
+</div>
+
+
+<div id="imageTemplate" class="d-none">
+    <img class='image img-fluid' style='width: 25%;' src='' />
+</div>
+
+
+
+<script>
+    RemoveImagesOnClick();
+
+    $("#tenantForm").validate({
+        errorElement: 'div',
+
+        rules: {
+            TenantName: {
+                required: true
+            },
+            TenantAddress: {
+                required: true
+            },
+            DateJoined: {
+                required: true
+            },
+            TenantMobile: {
+                minlength: 10,
+                maxlength: 10
+            }
+        },
+        messages: {
+            TenantName: {
+                required: "Name is required"
+            },
+            TenantMobile: {
+                minlength: "Invalid Phone number",
+                maxlength: "Invalid Phone number"
+            }
+        }
+    });
+
+    $("#btnSave").click(function () {
+
+        if ($("#tenantForm").valid) {
+        var imageIDs = [];
+        $("#picturesArea .image").each(function () {
+            var imageID = $(this).attr("data-id");
+            imageIDs.push(imageID);
+        });
+        $("#pictureIDs").val(imageIDs.join());
+
+        $.ajax({
+                url: "@Url.Action("EditTenant", "TrackTenant")",
+                method: "post",
+                data: $("#tenantForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    $('#modalCreate').modal('toggle');
+                    swal("Success!", "Tenant updated!", "success");
+                    ReloadTenantListing();
+                } else {
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+
+    });
+
+
+    $("#ContractPic").change(function () {
+        var pictures = this.files;
+        var picsData = new FormData();
+        for (var i = 0; i < pictures.length; i++) {
+            picsData.append("Picture", pictures[i]);
+        }
+
+        $.ajax({
+            url: "@Url.Action("PictureContractDoc", "Picture")",
+            type: "post",
+            data: picsData,
+            datatype: "json",
+            processData: false,
+            contentType: false
+        }).done(function (responses) {
+            for (var i = 0; i < responses.length; i++) {
+                var picResponse = responses[i];
+                AttachNewImage(picResponse.pictureURL, picResponse.ID);
+            }
+            });
+    });
+
+    function AttachNewImage(imageURL, imageID) {
+        var $newimgHTML = $("#imageTemplate").clone();
+        $newimgHTML.find(".image").attr("src", "/images/ContractDocuments/" + imageURL);
+        $newimgHTML.find(".image").attr("data-id", imageID);
+        $("#picturesArea").append($newimgHTML.html());
+        RemoveImagesOnClick();
+    }
+
+    function RemoveImagesOnClick() {
+        $("#picturesArea .image").click(function() {
+            $(this).remove();
+        });
+    }
+
+</script>

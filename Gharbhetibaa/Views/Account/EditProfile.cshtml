@@ -1,0 +1,233 @@
+﻿@using Gharbhetibaa.Models
+
+@model Gharbhetibaa.Models.UserAccount
+
+@{
+    ViewBag.Title = "Edit Profile";
+    var imageURL = !string.IsNullOrEmpty(Model.ImageURL) ? "/images/UserAccount/" + Model.ImageURL : "/images/Shared/DefaultUser.png";
+}
+
+<section id="editprofile">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-sm-12 col-md-7 login-box">
+                @*<img src="@Url.Content(Model.ImageURL)" class="avatar" height="200" width="200" id="productImage" />*@
+
+                @* Profile picture *@
+                <img class="avatar" id="productImage" width="150" height="150" src="@imageURL" />
+
+                @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post, new { @id = "editProfile" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.UserID)
+                    @Html.HiddenFor(model => model.UserName)
+                    @Html.HiddenFor(model => model.Password)
+                    @Html.HiddenFor(model => model.ActivationCode)
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h3 class="text-center">
+                                <span class="txt-default">
+                                    &#64;@Html.DisplayTextFor(model => model.UserName)
+                                </span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.FirstName) } })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.LastName) } })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-venus-mars"></i>
+                                    </span>
+                                    @Html.DropDownList("Gender", new SelectList(Enum.GetValues(typeof(Gender))), "Select Gender", new { @class = "form-control rounded-0" })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.DateOfBirth) } })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-address-card"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Address) } })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.MobileNumber) } })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12 col-md-6">
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "txt-default col-form-label" })
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.Email) } })
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="txt-default col-form-label">Upload Image</div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-image"></i>
+                                    </span>
+                                    <input type="hidden" id="ImageURL" name="ImageURL" />
+                                    <input class="form-control rounded-0" id="imageUpload" name="Image" type="file" accept="image/*" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            @Html.LabelFor(model => model.AboutMe, htmlAttributes: new { @class = "txt-default col-form-label" })
+                        </div>
+                        <div class="col-12">
+                            @Html.TextAreaFor(model => model.AboutMe, new { @class = "form-control rounded-0", @rows = 5, @placeholder = @Html.DisplayNameFor(n => n.AboutMe) })
+                            @Html.ValidationMessageFor(model => model.AboutMe, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-right">
+                                <button class="btn btn-default rounded-0" type="submit" id="updateBtn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+	$("#imageUpload").change(function () {
+		var element = this;
+		var formData = new FormData();
+		var totalFiles = element.files.length;
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Picture")',
+			dataType: 'json',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+        .done(function (response) {
+        	console.log(response);
+        	if (response.Success) {
+        		$("#ImageURL").val(response.ImageURL);
+                $("#productImage").attr("src", "/images/UserAccount/" + response.ImageURL);
+                //$newimgHTML.find(".image").attr("src", "/images/Item/" + imageURL);
+
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+	$("#updateBtn").click(function () {
+        if ($("#editProfile").valid()) {
+			$.ajax({
+				type: 'POST',
+				url: '@Url.Action("EditProfile", "Account")',
+                data: $("#editProfile").serialize()
+			})
+			.done(function (response) {
+				//$("#tableContiner").html(response);
+				//$("#actionContainer").html("");
+				//focusAction("tableContiner");
+			})
+			.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				//alert("FAIL");
+			});
+		}
+		else {
+			swal({
+				title: "Warning",
+				text: "Please enter all valid data in fields.",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			});
+		}
+	});
+	//$("#cancelBtn").click(function () {
+	//	$("#actionContainer").html("");
+	//	focusAction("tableContiner");
+	//});
+</script>

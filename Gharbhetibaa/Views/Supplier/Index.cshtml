@@ -1,0 +1,75 @@
+﻿@model Gharbhetibaa.Models.PropertyManagement.Supplier
+
+<div class="modal-header">
+    <h5 class="modal-title text-white" id="exampleModalLongTitle">Supplier Details</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+</div>
+<div class="modal-body bg-white">
+    <section id="supplierdetails">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-6 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="col-6 col-md-7">
+                    @Model.SupplierName
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Profession, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="col-6 col-md-7">
+                    @Model.Profession
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="col-6 col-md-7">
+                    @Model.EmailAddress
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="col-6 col-md-7">
+                    @Model.MobileNumber
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="col-6 col-md-7">
+                    @Model.Address
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.SupplierNotes, htmlAttributes: new { @class = "" })
+                </div>
+                <div class="col-6 col-md-7 text-justify">
+                    @Model.SupplierNotes
+                </div>
+            </div>
+
+
+        </div>
+
+    </section>
+
+</div>
+<div class="modal-footer back-light">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>

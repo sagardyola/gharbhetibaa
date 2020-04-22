@@ -1,0 +1,182 @@
+﻿@model Gharbhetibaa.ViewModels.PropertyManagementVM
+
+
+<div id="propertyListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                My Properties
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Properties.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/no_properties.png" class="w-25" />
+                        <h4>
+                            No Properties Added
+                        </h4>
+                        <h5>Begin by adding a new property to start adding expenses, payments and leases.</h5>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Property Name</th>
+                            <th>Location</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var i in Model.Properties)
+                        {
+                            <tr>
+                                <td>
+
+                                    <button class="btn btnPropertyDetails a-feature p-0" title="View Property Details" data-id="@i.PropertyID" data-toggle="modal" data-target="#formModal">@i.Title</button>
+                                </td>
+                                <td>@i.LocationCity</td>
+                                <td>
+                                    <div class="form-inline">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm mr-2 btnAddTenant" title="Add Tenant" data-id="@i.PropertyID" data-toggle="modal" data-target="#modalCreate">
+                                            Add Tenant
+                                        </button>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm btnAddExpense" title="Add Expense" data-id="@i.PropertyID" data-toggle="modal" data-target="#modalCreate">
+                                            Add Expense
+                                        </button>
+                                        <button type="button" class="btn pt-0 pb-0 btnEditProperty" title="Edit Property" data-id="@i.PropertyID" data-toggle="modal" data-target="#modalCreate"><i class="fas fa-edit"></i></button>
+
+                                        <button class="btn btnDeleteProperty pt-0 pb-0" title="Delete Property" data-id="@i.PropertyID"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                @Html.Partial("_Pagination")
+
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content back-secondary" id="propertyContent">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(".btnAddTenant").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddTenant", "TrackTenant")",
+            type: "get",
+            data: {
+                PropertyID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+        });
+
+        $(".btnAddExpense").click(function () {
+        $.ajax({
+            url: "@Url.Action("AddExpense", "Expense")",
+            type: "get",
+            data: {
+                PropertyID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+        
+
+        $(".btnEditProperty").click(function (){
+        $.ajax({
+            url: "@Url.Action("EditProperty", "TrackProperty")",
+            type: "get",
+            data: {
+                PropertyID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contentCreate").html(response);
+
+            });
+    });
+
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("MyProperties", "PropertyManagement")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#propertyListing").replaceWith(response);
+            });
+    });
+
+
+    $(".btnPropertyDetails").click(function (){
+        $.ajax({
+            url: "@Url.Action("Index", "TrackProperty")",
+            type: "get",
+            data: {
+                PropertyID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#propertyContent").html(response);
+
+            });
+    });
+
+
+    $('.btnDeleteProperty').click(function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteProperty", "TrackProperty")",
+                        method: "post",
+                        data: {
+                            PropertyID: $(this).attr("data-id")
+                        }
+                    }).done(function (response) {
+                        swal("Success", "Property has been deleted!", {
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                //window.location.reload();
+                                $("#propertyListing").replaceWith(response);
+                            });
+                    });
+
+                }
+            });
+        });
+
+
+        function ReloadPropertyListing() {
+            $.ajax({
+                url: "@Url.Action("MyProperties", "PropertyManagement")",
+                method: "get"
+            }).done(function (response) {
+                $("#propertyListing").replaceWith(response);
+
+            });
+        }
+    </script>
+</div>

@@ -1,0 +1,118 @@
+﻿@model Gharbhetibaa.Models.PropertyManagement.Expense
+
+<div class="modal-header">
+    <h5 class="modal-title text-white" id="exampleModalLongTitle">Add Expense</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+</div>
+<div class="modal-body bg-white">
+    <div class="container mt-2">
+        <div class="row mb-3">
+            <div class="col-12 offset-md-1">
+                <span class="text-danger font-weight-bold">*</span> Indicates required field
+            </div>
+        </div>
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "expenseForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.Hidden("PropertyID", "@ViewBag.PropertyID")
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.ExpenseTitle, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.ExpenseTitle, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.ExpenseTitle) } })
+                    @Html.ValidationMessageFor(model => model.ExpenseTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.TotalAmount) } })
+                    @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.PaymentDate, htmlAttributes: new { @class = "col-form-label" }) <span class="text-danger font-weight-bold">*</span>
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.PaymentDate, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.PaymentDate) } })
+                    @Html.ValidationMessageFor(model => model.PaymentDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label" })
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.TextAreaFor(model => model.Notes, new { @class = "form-control rounded-0", @rows = 3, @placeholder = @Html.DisplayNameFor(n => n.Notes) })
+                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-7 offset-md-4 text-danger errorMsg" id="formErrors">
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal-footer back-light">
+    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+    <button class="btn btn-primary rounded-0" id="btnSave" type="button">Save</button>
+</div>
+
+
+<script>
+    $("#expenseForm").validate({
+        errorElement: 'div',
+
+        rules: {
+            ExpenseTitle: {
+                required: true
+            },
+            TotalAmount: {
+                required: true
+            },
+            PaymentDate: {
+                required: true
+            }
+        },
+        messages: {
+            ExpenseTitle: {
+                required: "Title is required"
+            }
+        }
+    });
+
+    $('#btnSave').click(function () {
+        if ($("#expenseForm").valid) {
+            $.ajax({
+                url: "@Url.Action("AddExpense", "Expense")",
+                method: "post",
+                data: $("#expenseForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    $('#modalCreate').modal('toggle');
+                    swal("Success!", "Expense added!", "success");
+                    //ReloadExpenseListing();
+
+                } else {
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+
+    });
+
+</script>

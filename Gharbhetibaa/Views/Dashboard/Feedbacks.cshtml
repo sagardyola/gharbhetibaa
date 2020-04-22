@@ -1,0 +1,95 @@
+﻿@model Gharbhetibaa.ViewModels.DashboardVM
+
+<div id="contactListing">
+    <div class="card mb-3" style="border:1px solid black;">
+        <div class="card-header back-primary">
+            <h5 class="card-title text-center txt-secondary">
+                Feedbacks
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Feedbacks.ToList().Count() == 0)
+            {
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img src="~/images/Shared/contacted.png" class="w-50" />
+                        <h4 class="mt-3">
+                            No one has given feedback yet.
+                        </h4>
+                        <h5></h5>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h6>The following users have given feedbacks.</h6>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Timestamp</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var i in Model.Feedbacks)
+                        {
+                            <tr>
+                                <td>@i.Name</td>
+                                <td>@i.Email</td>
+                                <td>
+                                    @Html.Raw((i.Subject.Length > 15 ? i.Subject.Substring(0, 15) : i.Subject))
+                                </td>
+                                <td>@i.Timestamp.ToString("MM/dd/yyyy")</td>
+                                <td>
+                                    <button type="submit" class="btn btn-outline-info btn-sm btnFeedback" title="View Details" data-id="@i.FeedbackID" data-toggle="modal" data-target="#formModal">VIEW DETAILS</button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                @Html.Partial("_Pagination")
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content back-secondary" id="contactContent">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+            $(".btnFeedback").click(function (){
+        $.ajax({
+            url: "@Url.Action("FeedbackDetails", "Dashboard")",
+            method: "get",
+            data: {
+                FeedbackID: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contactContent").html(response);
+
+            });
+        });
+
+
+        $(".pager-site").click(function (){
+        $.ajax({
+            url: "@Url.Action("Contacted", "Dashboard")",
+            type: "get",
+            data: {
+                pageNo: $(this).attr("data-id")
+            }
+        }).done(function (response) {
+            $("#contactListing").replaceWith(response);
+            });
+    });
+    </script>
+</div>

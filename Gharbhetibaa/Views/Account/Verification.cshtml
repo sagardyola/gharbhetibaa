@@ -1,0 +1,122 @@
+﻿@model Gharbhetibaa.ViewModels.VerifyUserVM
+
+<div class="modal-header">
+    <h5 class="modal-title text-white" id="exampleModalLongTitle">Verify your Account</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+</div>
+<div class="modal-body bg-white">
+    <div class="container mt-3">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "sendEmailForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Email)
+            @Html.HiddenFor(model => model.Subject)
+            @Html.HiddenFor(model => model.Message)
+
+            <div class="row mb-3">
+                <div class="col-12 offset-md-1">
+                    <button class="btn btn-primary btn-sm rounded-0 btnSendEmail" type="button">SEND</button> verification code sent to <span class="font-weight-bold">@Model.Email</span>?
+                </div>
+            </div>
+        }
+
+
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12 col-md-7 offset-md-4 text-danger errorMsg" id="formErrors">
+            </div>
+        </div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "verifyForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 offset-md-1">
+                    @Html.LabelFor(model => model.VerifyCode, htmlAttributes: new { @class = "col-form-label" })
+                </div>
+                <div class="col-8 col-md-7">
+                    @Html.EditorFor(model => model.VerifyCode, new { htmlAttributes = new { @class = "form-control rounded-0", @placeholder = @Html.DisplayNameFor(n => n.VerifyCode) } })
+                    @Html.ValidationMessageFor(model => model.VerifyCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<div class="modal-footer back-light">
+    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Close</button>
+    <button class="btn btn-primary rounded-0" id="btnSave" type="button">Verify</button>
+</div>
+
+<script>
+    $("#verifyForm").validate({
+        errorElement: 'div',
+
+        rules: {
+            Code: {
+                required: true
+            }
+        },
+        messages: {
+            Code: {
+                required: "Please enter the code"
+            }
+        }
+    });
+
+    $('#btnSave').click(function () {
+        if ($("#verifyForm").valid) {
+            $.ajax({
+                url: "@Url.Action("Verification", "Account")",
+                method: "post",
+                data: $("#verifyForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    $('#modalVerify').modal('toggle');
+
+                    swal("Success", "User Verified!", {
+                        icon: "success",
+                    })
+                        .then((value) => {
+                            window.location.reload();
+                        });
+                } else {
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+
+    });
+
+
+
+    $('.btnSendEmail').click(function () {
+        $('.btnSendEmail').attr('disabled', true)
+
+        if ($("#sendEmailForm").valid) {
+            $.ajax({
+                url: "@Url.Action("SendEmailToUser", "Email")",
+                method: "Post",
+                data: $("#sendEmailForm").serialize()
+            }).done(function (response) {
+                if (response.Success) {
+                    swal("Success!", "Email sent!", "success");
+                } else {
+                    $('.btnSendEmail').attr('disabled', false)
+                    $("#formErrors").html(response.Error);
+                    $("#formErrors").show();
+                }
+            });
+        }
+    });
+</script>
